@@ -1,11 +1,11 @@
 ﻿namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// A statically compiled "singleton" used to store objects throughout the 
+    /// A statically compiled "singleton" used to site objects throughout the 
     /// lifetime of the app domain. Not so much singleton in the pattern's 
-    /// sense of the word as a standardized way to store single instances.
+    /// sense of the word as a standardized way to site single instances.
     /// </summary>
-    /// <typeparam name="T">The type of object to store.</typeparam>
+    /// <typeparam name="T">The type of object to site.</typeparam>
     /// <remarks>Access to the instance is not synchronized.</remarks>
     public class Singleton<T> : BaseSingleton
     {

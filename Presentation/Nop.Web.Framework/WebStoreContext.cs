@@ -3,26 +3,26 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Users;
+using Nop.Core.Domain.Sites;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
-using Nop.Services.Stores;
+using Nop.Services.Sites;
 
 namespace Nop.Web.Framework
 {
     /// <summary>
-    /// Store context for web application
+    /// Site context for web application
     /// </summary>
-    public partial class WebStoreContext : IStoreContext
+    public partial class WebSiteContext : ISiteContext
     {
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IStoreService _storeService;
+        private readonly ISiteService _siteService;
 
-        private Store _cachedStore;
-        private int? _cachedActiveStoreScopeConfiguration;
+        private Site _cachedSite;
+        private Guid? _cachedActiveSiteScopeConfiguration;
 
         #endregion
 
@@ -32,12 +32,12 @@ namespace Nop.Web.Framework
         /// Ctor
         /// </summary>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
-        /// <param name="storeService">Store service</param>
-        public WebStoreContext(IHttpContextAccessor httpContextAccessor,
-            IStoreService storeService)
+        /// <param name="siteService">Site service</param>
+        public WebSiteContext(IHttpContextAccessor httpContextAccessor,
+            ISiteService siteService)
         {
             this._httpContextAccessor = httpContextAccessor;
-            this._storeService = storeService;
+            this._siteService = siteService;
         }
 
         #endregion
@@ -45,58 +45,58 @@ namespace Nop.Web.Framework
         #region Properties
 
         /// <summary>
-        /// Gets the current store
+        /// Gets the current site
         /// </summary>
-        public virtual Store CurrentStore
+        public virtual Site CurrentSite
         {
             get
             {
-                if (_cachedStore != null)
-                    return _cachedStore;
+                if (_cachedSite != null)
+                    return _cachedSite;
 
-                //try to determine the current store by HOST header
+                //try to determine the current site by HOST header
                 string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
 
-                var allStores = _storeService.GetAllStores();
-                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
+                var allSites = _siteService.GetAllSites();
+                var site = allSites.FirstOrDefault(s => s.ContainsHostValue(host));
 
-                if (store == null)
+                if (site == null)
                 {
-                    //load the first found store
-                    store = allStores.FirstOrDefault();
+                    //load the first found site
+                    site = allSites.FirstOrDefault();
                 }
 
-                _cachedStore = store ?? throw new Exception("No store could be loaded");
+                _cachedSite = site ?? throw new Exception("No site could be loaded");
 
-                return _cachedStore;
+                return _cachedSite;
             }
         }
 
         /// <summary>
-        /// Gets active store scope configuration
+        /// Gets active site scope configuration
         /// </summary>
-        public virtual int ActiveStoreScopeConfiguration
+        public virtual Guid ActiveSiteScopeConfiguration
         {
             get
             {
-                if (_cachedActiveStoreScopeConfiguration.HasValue)
-                    return _cachedActiveStoreScopeConfiguration.Value;
+                if (_cachedActiveSiteScopeConfiguration.HasValue)
+                    return _cachedActiveSiteScopeConfiguration.Value;
 
-                //ensure that we have 2 (or more) stores
-                if (_storeService.GetAllStores().Count > 1)
+                //ensure that we have 2 (or more) sites
+                if (_siteService.GetAllSites().Count > 1)
                 {
                     //do not inject IWorkContext via constructor because it'll cause circular references
-                    var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                    var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
 
-                    //try to get store identifier from attributes
-                    var storeId = currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+                    //try to get site identifier from attributes
+                    var siteId = currentUser.GetAttribute<int>(SystemUserAttributeNames.AdminAreaSiteScopeConfiguration);
 
-                    _cachedActiveStoreScopeConfiguration = _storeService.GetStoreById(storeId)?.Id ?? 0;
+                    _cachedActiveSiteScopeConfiguration = _siteService.GetSiteById(siteId)?.Id ?? default(Guid);
                 }
                 else
-                    _cachedActiveStoreScopeConfiguration = 0;
+                    _cachedActiveSiteScopeConfiguration = default(Guid);
 
-                return _cachedActiveStoreScopeConfiguration ?? 0;
+                return _cachedActiveSiteScopeConfiguration ?? default(Guid);
             }
         }
 

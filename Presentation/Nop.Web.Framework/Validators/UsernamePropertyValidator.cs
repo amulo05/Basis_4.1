@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation.Validators;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 
 namespace Nop.Web.Framework.Validators
 {
@@ -10,15 +10,15 @@ namespace Nop.Web.Framework.Validators
     /// </summary>
     public class UsernamePropertyValidator : PropertyValidator
     {
-        private readonly CustomerSettings _customerSettings;
+        private readonly UserSettings _userSettings;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        public UsernamePropertyValidator(CustomerSettings customerSettings)
+        public UsernamePropertyValidator(UserSettings userSettings)
             : base("Username is not valid")
         {
-            this._customerSettings = customerSettings;
+            this._userSettings = userSettings;
         }
 
         /// <summary>
@@ -28,26 +28,26 @@ namespace Nop.Web.Framework.Validators
         /// <returns>Result</returns>
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            return IsValid(context.PropertyValue as string, _customerSettings);
+            return IsValid(context.PropertyValue as string, _userSettings);
         }
 
         /// <summary>
         /// Is valid?
         /// </summary>
         /// <param name="username">Username</param>
-        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="userSettings">User settings</param>
         /// <returns>Result</returns>
-        public static bool IsValid(string username, CustomerSettings customerSettings)
+        public static bool IsValid(string username, UserSettings userSettings)
         {
-            if (!customerSettings.UsernameValidationEnabled || string.IsNullOrEmpty(customerSettings.UsernameValidationRule))
+            if (!userSettings.UsernameValidationEnabled || string.IsNullOrEmpty(userSettings.UsernameValidationRule))
                 return true;
 
             if (string.IsNullOrEmpty(username))
                 return false;
 
-            return customerSettings.UsernameValidationUseRegex
-                ? Regex.IsMatch(username, customerSettings.UsernameValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
-                : username.All(l => customerSettings.UsernameValidationRule.Contains(l));
+            return userSettings.UsernameValidationUseRegex
+                ? Regex.IsMatch(username, userSettings.UsernameValidationRule, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+                : username.All(l => userSettings.UsernameValidationRule.Contains(l));
         }
     }
 }

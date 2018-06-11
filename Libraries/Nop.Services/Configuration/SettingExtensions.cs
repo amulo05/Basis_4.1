@@ -11,7 +11,7 @@ namespace Nop.Services.Configuration
     public static class SettingExtensions
     {
         /// <summary>
-        /// Get setting key (stored into database)
+        /// Get setting key (sited into database)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <typeparam name="TPropType">Property type</typeparam>

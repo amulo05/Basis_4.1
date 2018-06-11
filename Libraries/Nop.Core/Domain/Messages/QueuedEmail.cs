@@ -100,7 +100,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the used email account identifier
         /// </summary>
-        public int EmailAccountId { get; set; }
+        public Guid EmailAccountId { get; set; }
 
         /// <summary>
         /// Gets the email account

@@ -155,7 +155,7 @@ namespace Nop.Services.Common
         /// <param name="entityId">Entity identifier</param>
         /// <param name="keyGroup">Key group</param>
         /// <returns>Get attributes</returns>
-        public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
+        public virtual IList<GenericAttribute> GetAttributesForEntity(Guid entityId, string keyGroup)
         {
             var key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
@@ -176,8 +176,8 @@ namespace Nop.Services.Common
         /// <param name="entity">Entity</param>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
-        public virtual void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0)
+        /// <param name="siteId">Site identifier; pass 0 if this attribute will be available for all sites</param>
+        public virtual void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, Guid siteId = default(Guid))
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -188,7 +188,7 @@ namespace Nop.Services.Common
             var keyGroup = entity.GetType().BaseType.Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
-                .Where(x => x.StoreId == storeId)
+                .Where(x => x.SiteId == siteId)
                 .ToList();
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
@@ -220,7 +220,7 @@ namespace Nop.Services.Common
                         Key = key,
                         KeyGroup = keyGroup,
                         Value = valueStr,
-                        StoreId = storeId,
+                        SiteId = siteId,
                         
                     };
                     InsertAttribute(prop);

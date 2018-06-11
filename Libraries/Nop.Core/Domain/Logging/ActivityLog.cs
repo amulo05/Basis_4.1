@@ -1,5 +1,5 @@
 ﻿using System;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 
 namespace Nop.Core.Domain.Logging
 {
@@ -11,12 +11,12 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
-        public int ActivityLogTypeId { get; set; }
+        public Guid ActivityLogTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int? EntityId { get; set; }
+        public Guid? EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name
@@ -24,9 +24,9 @@ namespace Nop.Core.Domain.Logging
         public string EntityName { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer identifier
+        /// Gets or sets the user identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the activity comment
@@ -44,9 +44,9 @@ namespace Nop.Core.Domain.Logging
         public virtual ActivityLogType ActivityLogType { get; set; }
 
         /// <summary>
-        /// Gets the customer
+        /// Gets the user
         /// </summary>
-        public virtual Customer Customer { get; set; }
+        public virtual User User { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
@@ -11,15 +11,15 @@ namespace Nop.Services.Security
     {
         //admin area permissions
         public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
-        public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
+        public static readonly PermissionRecord AllowUserImpersonation = new PermissionRecord { Name = "Admin area. Allow User Impersonation", SystemName = "AllowUserImpersonation", Category = "Users" };
         public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
         public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
         public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
         public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
         public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = "ManageProductTags", Category = "Catalog" };
         public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = "ManageAttributes", Category = "Catalog" };
-        public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
-        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
+        public static readonly PermissionRecord ManageUsers = new PermissionRecord { Name = "Admin area. Manage Users", SystemName = "ManageUsers", Category = "Users" };
+        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Users" };
         public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = "ManageCurrentCarts", Category = "Orders" };
         public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
@@ -48,7 +48,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageActivityLog = new PermissionRecord { Name = "Admin area. Manage Activity Log", SystemName = "ManageActivityLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageAcl = new PermissionRecord { Name = "Admin area. Manage ACL", SystemName = "ManageACL", Category = "Configuration" };
         public static readonly PermissionRecord ManageEmailAccounts = new PermissionRecord { Name = "Admin area. Manage Email Accounts", SystemName = "ManageEmailAccounts", Category = "Configuration" };
-        public static readonly PermissionRecord ManageStores = new PermissionRecord { Name = "Admin area. Manage Stores", SystemName = "ManageStores", Category = "Configuration" };
+        public static readonly PermissionRecord ManageSites = new PermissionRecord { Name = "Admin area. Manage Sites", SystemName = "ManageSites", Category = "Configuration" };
         public static readonly PermissionRecord ManagePlugins = new PermissionRecord { Name = "Admin area. Manage Plugins", SystemName = "ManagePlugins", Category = "Configuration" };
         public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = "ManageSystemLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
@@ -56,12 +56,12 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
         
-        //public store permissions
-        public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
-        public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
-        public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
-        public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
-        public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
+        //public site permissions
+        public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public site. Display Prices", SystemName = "DisplayPrices", Category = "PublicSite" };
+        public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public site. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicSite" };
+        public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public site. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicSite" };
+        public static readonly PermissionRecord PublicSiteAllowNavigation = new PermissionRecord { Name = "Public site. Allow navigation", SystemName = "PublicSiteAllowNavigation", Category = "PublicSite" };
+        public static readonly PermissionRecord AccessClosedSite = new PermissionRecord { Name = "Public site. Access a closed site", SystemName = "AccessClosedSite", Category = "PublicSite" };
 
         /// <summary>
         /// Get permissions
@@ -72,14 +72,14 @@ namespace Nop.Services.Security
             return new[] 
             {
                 AccessAdminPanel,
-                AllowCustomerImpersonation,
+                AllowUserImpersonation,
                 ManageProducts,
                 ManageCategories,
                 ManageManufacturers,
                 ManageProductReviews,
                 ManageProductTags,
                 ManageAttributes,
-                ManageCustomers,
+                ManageUsers,
                 ManageVendors,
                 ManageCurrentCarts,
                 ManageOrders,
@@ -109,7 +109,7 @@ namespace Nop.Services.Security
                 ManageActivityLog,
                 ManageAcl,
                 ManageEmailAccounts,
-                ManageStores,
+                ManageSites,
                 ManagePlugins,
                 ManageSystemLog,
                 ManageMessageQueue,
@@ -119,8 +119,8 @@ namespace Nop.Services.Security
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
-                PublicStoreAllowNavigation,
-                AccessClosedStore
+                PublicSiteAllowNavigation,
+                AccessClosedSite
             };
         }
 
@@ -134,18 +134,18 @@ namespace Nop.Services.Security
             {
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Administrators,
+                    UserRoleSystemName = SystemUserRoleNames.Administrators,
                     PermissionRecords = new[] 
                     {
                         AccessAdminPanel,
-                        AllowCustomerImpersonation,
+                        AllowUserImpersonation,
                         ManageProducts,
                         ManageCategories,
                         ManageManufacturers,
                         ManageProductReviews,
                         ManageProductTags,
                         ManageAttributes,
-                        ManageCustomers,
+                        ManageUsers,
                         ManageVendors,
                         ManageCurrentCarts,
                         ManageOrders,
@@ -175,7 +175,7 @@ namespace Nop.Services.Security
                         ManageActivityLog,
                         ManageAcl,
                         ManageEmailAccounts,
-                        ManageStores,
+                        ManageSites,
                         ManagePlugins,
                         ManageSystemLog,
                         ManageMessageQueue,
@@ -185,46 +185,46 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation,
-                        AccessClosedStore
+                        PublicSiteAllowNavigation,
+                        AccessClosedSite
                     }
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.ForumModerators,
+                    UserRoleSystemName = SystemUserRoleNames.ForumModerators,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicSiteAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
+                    UserRoleSystemName = SystemUserRoleNames.Guests,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicSiteAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Registered,
+                    UserRoleSystemName = SystemUserRoleNames.Registered,
                     PermissionRecords = new[] 
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation
+                        PublicSiteAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
                 {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Vendors,
+                    UserRoleSystemName = SystemUserRoleNames.Vendors,
                     PermissionRecords = new[] 
                     {
                         AccessAdminPanel,

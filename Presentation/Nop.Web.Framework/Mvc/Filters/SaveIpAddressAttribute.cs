@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
+using Nop.Core.Domain.Users;
+using Nop.Services.Users;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
-    /// Represents filter attribute that saves last IP address of customer
+    /// Represents filter attribute that saves last IP address of user
     /// </summary>
     public class SaveIpAddressAttribute : TypeFilterAttribute
     {
@@ -28,30 +28,30 @@ namespace Nop.Web.Framework.Mvc.Filters
         #region Nested filter
 
         /// <summary>
-        /// Represents a filter that saves last IP address of customer
+        /// Represents a filter that saves last IP address of user
         /// </summary>
         private class SaveIpAddressFilter : IActionFilter
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
+            private readonly IUserService _userService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
-            private readonly CustomerSettings _customerSettings;
+            private readonly UserSettings _userSettings;
 
             #endregion
 
             #region Ctor
 
-            public SaveIpAddressFilter(ICustomerService customerService,
+            public SaveIpAddressFilter(IUserService userService,
                 IWebHelper webHelper,
                 IWorkContext workContext,
-                CustomerSettings customerSettings)
+                UserSettings userSettings)
             {
-                this._customerService = customerService;
+                this._userService = userService;
                 this._webHelper = webHelper;
                 this._workContext = workContext;
-                this._customerSettings = customerSettings;
+                this._userSettings = userSettings;
             }
 
             #endregion
@@ -77,8 +77,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
-                //check whether we store IP addresses
-                if (!_customerSettings.StoreIpAddresses)
+                //check whether we site IP addresses
+                if (!_userSettings.SiteIpAddresses)
                     return;
 
                 //get current IP address
@@ -86,11 +86,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(currentIpAddress))
                     return;
                 
-                //update customer's IP address
-                if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
+                //update user's IP address
+                if (!currentIpAddress.Equals(_workContext.CurrentUser.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _workContext.CurrentUser.LastIpAddress = currentIpAddress;
+                    _userService.UpdateUser(_workContext.CurrentUser);
                 }
             }
 

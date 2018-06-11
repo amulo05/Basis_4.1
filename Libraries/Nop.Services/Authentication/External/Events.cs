@@ -1,27 +1,27 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Users;
 
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
-    /// Customer auto registered by external authentication method event
+    /// User auto registered by external authentication method event
     /// </summary>
-    public class CustomerAutoRegisteredByExternalMethodEvent
+    public class UserAutoRegisteredByExternalMethodEvent
     {
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="parameters">Parameters</param>
-        public CustomerAutoRegisteredByExternalMethodEvent(Customer customer, ExternalAuthenticationParameters parameters)
+        public UserAutoRegisteredByExternalMethodEvent(User user, ExternalAuthenticationParameters parameters)
         {
-            this.Customer = customer;
+            this.User = user;
             this.AuthenticationParameters = parameters;
         }
 
         /// <summary>
-        /// Gets or sets customer
+        /// Gets or sets user
         /// </summary>
-        public Customer Customer { get; }
+        public User User { get; }
 
         /// <summary>
         /// Gets or sets external authentication parameters

@@ -22,9 +22,9 @@ namespace Nop.Data.Mapping.Security
 
             builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
 
-            builder.HasOne(record => record.CustomerRole)
+            builder.HasOne(record => record.UserRole)
                 .WithMany()
-                .HasForeignKey(record => record.CustomerRoleId)
+                .HasForeignKey(record => record.UserRoleId)
                 .IsRequired();
 
             base.Configure(builder);

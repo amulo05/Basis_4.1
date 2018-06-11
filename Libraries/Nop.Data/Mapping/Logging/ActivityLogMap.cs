@@ -29,9 +29,9 @@ namespace Nop.Data.Mapping.Logging
                 .HasForeignKey(logItem => logItem.ActivityLogTypeId)
                 .IsRequired();
 
-            builder.HasOne(logItem => logItem.Customer)
+            builder.HasOne(logItem => logItem.User)
                 .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId)
+                .HasForeignKey(logItem => logItem.UserId)
                 .IsRequired();
 
             base.Configure(builder);

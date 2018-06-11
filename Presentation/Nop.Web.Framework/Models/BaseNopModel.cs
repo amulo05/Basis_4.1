@@ -49,7 +49,7 @@ namespace Nop.Web.Framework.Models
         public IFormCollection Form { get; set; }
 
         /// <summary>
-        /// Gets or sets property to store any custom values for models 
+        /// Gets or sets property to site any custom values for models 
         /// </summary>
         public Dictionary<string, object> CustomProperties { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Provides access to all "singletons" stored by <see cref="Singleton{T}"/>.
+    /// Provides access to all "singletons" sited by <see cref="Singleton{T}"/>.
     /// </summary>
     public class BaseSingleton
     {

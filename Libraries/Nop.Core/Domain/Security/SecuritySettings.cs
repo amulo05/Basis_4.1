@@ -29,9 +29,9 @@ namespace Nop.Core.Domain.Security
         public bool EnableXsrfProtectionForAdminArea { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether XSRF protection for public store should be enabled
+        /// Gets or sets a value indicating whether XSRF protection for public site should be enabled
         /// </summary>
-        public bool EnableXsrfProtectionForPublicStore { get; set; }
+        public bool EnableXsrfProtectionForPublicSite { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether honeypot is enabled on the registration page

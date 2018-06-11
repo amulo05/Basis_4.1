@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Messages;
+using System;
 
 namespace Nop.Services.Messages
 {
@@ -9,47 +10,47 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial interface IWorkflowMessageService
     {
-        #region Customer workflow
+        #region User workflow
 
         /// <summary>
-        /// Sends 'New customer' notification message to a store owner
+        /// Sends 'New user' notification message to a site owner
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerRegisteredNotificationMessage(Customer customer, int languageId);
+        IList<Guid> SendUserRegisteredNotificationMessage(User user);
 
         /// <summary>
-        /// Sends a welcome message to a customer
+        /// Sends a welcome message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerWelcomeMessage(Customer customer, int languageId);
+        IList<Guid> SendUserWelcomeMessage(User user);
 
         /// <summary>
-        /// Sends an email validation message to a customer
+        /// Sends an email validation message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerEmailValidationMessage(Customer customer, int languageId);
+        IList<Guid> SendUserEmailValidationMessage(User user);
 
         /// <summary>
-        /// Sends an email re-validation message to a customer
+        /// Sends an email re-validation message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerEmailRevalidationMessage(Customer customer, int languageId);
+        IList<Guid> SendUserEmailRevalidationMessage(User user);
 
         /// <summary>
-        /// Sends password recovery message to a customer
+        /// Sends password recovery message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerPasswordRecoveryMessage(Customer customer, int languageId);
+        IList<Guid> SendUserPasswordRecoveryMessage(User user);
 
         #endregion
 
@@ -70,8 +71,8 @@ namespace Nop.Services.Messages
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        int SendNotification(MessageTemplate messageTemplate,
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+        Guid SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,

@@ -10,18 +10,18 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Sites;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
-using Nop.Services.Customers;
+using Nop.Services.Users;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
-using Nop.Services.Stores;
+using Nop.Services.Sites;
 
 namespace Nop.Services.Messages
 {
@@ -35,15 +35,15 @@ namespace Nop.Services.Messages
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkContext _workContext;
         private readonly IDownloadService _downloadService;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
+        private readonly ISiteService _siteService;
+        private readonly ISiteContext _siteContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         private readonly MessageTemplatesSettings _templatesSettings;
 
         private readonly IEventPublisher _eventPublisher;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly SiteInformationSettings _siteInformationSettings;
 
         private Dictionary<string, IEnumerable<string>> _allowedTokens;
 
@@ -63,11 +63,11 @@ namespace Nop.Services.Messages
         /// <param name="downloadService">Download service</param>
         /// <param name="orderService">Order service</param>
         /// <param name="paymentService">Payment service</param>
-        /// <param name="storeService">Store service</param>
-        /// <param name="storeContext">Store context</param>
+        /// <param name="siteService">Site service</param>
+        /// <param name="siteContext">Site context</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="addressAttributeFormatter">Address attribute formatter</param>
-        /// <param name="customerAttributeFormatter">Customer attribute formatter</param>
+        /// <param name="userAttributeFormatter">User attribute formatter</param>
         /// <param name="vendorAttributeFormatter">Vendor attribute formatter</param>
         /// <param name="urlHelperFactory">URL Helper factory</param>
         /// <param name="actionContextAccessor">Action context accessor</param>
@@ -78,29 +78,29 @@ namespace Nop.Services.Messages
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="storeInformationSettings">StoreInformation settings</param>
+        /// <param name="siteInformationSettings">SiteInformation settings</param>
         public MessageTokenProvider(IDateTimeHelper dateTimeHelper,
             IWorkContext workContext,
             IDownloadService downloadService,
-            IStoreService storeService,
-            IStoreContext storeContext,
+            ISiteService siteService,
+            ISiteContext siteContext,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor,
             MessageTemplatesSettings templatesSettings,
             IEventPublisher eventPublisher,
-            StoreInformationSettings storeInformationSettings)
+            SiteInformationSettings siteInformationSettings)
         {
             this._dateTimeHelper = dateTimeHelper;
             this._workContext = workContext;
             this._downloadService = downloadService;
             this._urlHelperFactory = urlHelperFactory;
             this._actionContextAccessor = actionContextAccessor;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
+            this._siteService = siteService;
+            this._siteContext = siteContext;
 
             this._templatesSettings = templatesSettings;
             this._eventPublisher = eventPublisher;
-            this._storeInformationSettings = storeInformationSettings;
+            this._siteInformationSettings = siteInformationSettings;
         }
 
         #endregion
@@ -119,45 +119,45 @@ namespace Nop.Services.Messages
 
                 _allowedTokens = new Dictionary<string, IEnumerable<string>>();
 
-                //store tokens
-                _allowedTokens.Add(TokenGroupNames.StoreTokens, new[]
+                //site tokens
+                _allowedTokens.Add(TokenGroupNames.SiteTokens, new[]
                 {
-                    "%Store.Name%",
-                    "%Store.URL%",
-                    "%Store.Email%",
-                    "%Store.CompanyName%",
-                    "%Store.CompanyAddress%",
-                    "%Store.CompanyPhoneNumber%",
-                    "%Store.CompanyVat%",
+                    "%Site.Name%",
+                    "%Site.URL%",
+                    "%Site.Email%",
+                    "%Site.CompanyName%",
+                    "%Site.CompanyAddress%",
+                    "%Site.CompanyPhoneNumber%",
+                    "%Site.CompanyVat%",
                     "%Facebook.URL%",
                     "%Twitter.URL%",
                     "%YouTube.URL%",
                     "%GooglePlus.URL%"
                 });
 
-                //customer tokens
-                _allowedTokens.Add(TokenGroupNames.CustomerTokens, new[]
+                //user tokens
+                _allowedTokens.Add(TokenGroupNames.UserTokens, new[]
                 {
-                    "%Customer.Email%",
-                    "%Customer.Username%",
-                    "%Customer.FullName%",
-                    "%Customer.FirstName%",
-                    "%Customer.LastName%",
-                    "%Customer.VatNumber%",
-                    "%Customer.VatNumberStatus%",
-                    "%Customer.CustomAttributes%",
-                    "%Customer.PasswordRecoveryURL%",
-                    "%Customer.AccountActivationURL%",
-                    "%Customer.EmailRevalidationURL%",
-                    "%Wishlist.URLForCustomer%"
+                    "%User.Email%",
+                    "%User.Username%",
+                    "%User.FullName%",
+                    "%User.FirstName%",
+                    "%User.LastName%",
+                    "%User.VatNumber%",
+                    "%User.VatNumberStatus%",
+                    "%User.CustomAttributes%",
+                    "%User.PasswordRecoveryURL%",
+                    "%User.AccountActivationURL%",
+                    "%User.EmailRevalidationURL%",
+                    "%Wishlist.URLForUser%"
                 });
 
                 //order tokens
                 _allowedTokens.Add(TokenGroupNames.OrderTokens, new[]
                 {
                     "%Order.OrderNumber%",
-                    "%Order.CustomerFullName%",
-                    "%Order.CustomerEmail%",
+                    "%Order.UserFullName%",
+                    "%Order.UserEmail%",
                     "%Order.BillingFirstName%",
                     "%Order.BillingLastName%",
                     "%Order.BillingPhoneNumber%",
@@ -193,7 +193,7 @@ namespace Nop.Services.Messages
                     "%Order.CustomValues%",
                     "%Order.Product(s)%",
                     "%Order.CreatedOn%",
-                    "%Order.OrderURLForCustomer%"
+                    "%Order.OrderURLForUser%"
                 });
 
                 //shipment tokens
@@ -203,7 +203,7 @@ namespace Nop.Services.Messages
                     "%Shipment.TrackingNumber%",
                     "%Shipment.TrackingNumberURL%",
                     "%Shipment.Product(s)%",
-                    "%Shipment.URLForCustomer%"
+                    "%Shipment.URLForUser%"
                 });
 
                 //refunded order tokens
@@ -241,7 +241,7 @@ namespace Nop.Services.Messages
                     "%Product.ID%",
                     "%Product.Name%",
                     "%Product.ShortDescription%",
-                    "%Product.ProductURLForCustomer%",
+                    "%Product.ProductURLForUser%",
                     "%Product.SKU%",
                     "%Product.StockQuantity%"
                 });
@@ -255,7 +255,7 @@ namespace Nop.Services.Messages
                     "%ReturnRequest.Product.Name%",
                     "%ReturnRequest.Reason%",
                     "%ReturnRequest.RequestedAction%",
-                    "%ReturnRequest.CustomerComment%",
+                    "%ReturnRequest.UserComment%",
                     "%ReturnRequest.StaffNotes%",
                     "%ReturnRequest.Status%"
                 });
@@ -391,20 +391,20 @@ namespace Nop.Services.Messages
         #region Utilities
 
         /// <summary>
-        /// Generates an absolute URL for the specified store, routeName and route values
+        /// Generates an absolute URL for the specified site, routeName and route values
         /// </summary>
-        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
+        /// <param name="siteId">Site identifier; Pass 0 to load URL of the current site</param>
         /// <param name="routeName">The name of the route that is used to generate URL</param>
         /// <param name="routeValues">An object that contains route values</param>
         /// <returns>Generated URL</returns>
-        protected virtual string RouteUrl(int storeId = 0, string routeName = null, object routeValues = null)
+        protected virtual string RouteUrl(int siteId = 0, string routeName = null, object routeValues = null)
         {
-            //try to get a store by the passed identifier
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore
-                ?? throw new Exception("No store could be loaded");
+            //try to get a site by the passed identifier
+            var site = _siteService.GetSiteById(siteId) ?? _siteContext.CurrentSite
+                ?? throw new Exception("No site could be loaded");
 
-            //ensure that the store URL is specified
-            if (string.IsNullOrEmpty(store.Url))
+            //ensure that the site URL is specified
+            if (string.IsNullOrEmpty(site.Url))
                 throw new Exception("URL cannot be null");
             
             //generate a URL with an absolute path
@@ -416,7 +416,7 @@ namespace Nop.Services.Messages
             url.StartsWithSegments(pathBase, out url);
             
             //compose the result
-            return Uri.EscapeUriString(WebUtility.UrlDecode($"{store.Url.TrimEnd('/')}{url}"));
+            return Uri.EscapeUriString(WebUtility.UrlDecode($"{site.Url.TrimEnd('/')}{url}"));
         }
 
         #endregion
@@ -424,58 +424,49 @@ namespace Nop.Services.Messages
         #region Methods
 
         /// <summary>
-        /// Add store tokens
+        /// Add site tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="store">Store</param>
+        /// <param name="site">Site</param>
         /// <param name="emailAccount">Email account</param>
-        public virtual void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount)
+        public virtual void AddSiteTokens(IList<Token> tokens, Site site, EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            tokens.Add(new Token("Store.Name", store.Name));
-            tokens.Add(new Token("Store.URL", store.Url, true));
-            tokens.Add(new Token("Store.Email", emailAccount.Email));
-            tokens.Add(new Token("Store.CompanyName", store.CompanyName));
-            tokens.Add(new Token("Store.CompanyAddress", store.CompanyAddress));
-            tokens.Add(new Token("Store.CompanyPhoneNumber", store.CompanyPhoneNumber));
-            tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
-
-            tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
-            tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
-            tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
-            tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
+            tokens.Add(new Token("Site.Name", site.Name));
+            tokens.Add(new Token("Site.URL", site.Url, true));
+            tokens.Add(new Token("Site.Email", emailAccount.Email));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(store, tokens);
+            _eventPublisher.EntityTokensAdded(site, tokens);
         }
 
         /// <summary>
-        /// Add customer tokens
+        /// Add user tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer</param>
-        public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        /// <param name="user">User</param>
+        public virtual void AddUserTokens(IList<Token> tokens, User user)
         {
-            tokens.Add(new Token("Customer.Email", customer.Email));
-            tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
-            tokens.Add(new Token("Customer.FirstName", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)));
-            tokens.Add(new Token("Customer.LastName", customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)));
+            tokens.Add(new Token("User.Email", user.Email));
+            tokens.Add(new Token("User.Username", user.Username));
+            tokens.Add(new Token("User.FullName", user.GetFullName()));
+            tokens.Add(new Token("User.FirstName", user.GetAttribute<string>(SystemUserAttributeNames.FirstName)));
+            tokens.Add(new Token("User.LastName", user.GetAttribute<string>(SystemUserAttributeNames.LastName)));
             
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), email = customer.Email });
-            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), email = customer.Email });
-            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = customer.GetAttribute<string>(SystemCustomerAttributeNames.EmailRevalidationToken), email = customer.Email });
-            var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
-            tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
-            tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
-            tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.PasswordRecoveryToken), email = user.Email });
+            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.AccountActivationToken), email = user.Email });
+            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.EmailRevalidationToken), email = user.Email });
+            var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { userGuid = user.UserGuid });
+            tokens.Add(new Token("User.PasswordRecoveryURL", passwordRecoveryUrl, true));
+            tokens.Add(new Token("User.AccountActivationURL", accountActivationUrl, true));
+            tokens.Add(new Token("User.EmailRevalidationURL", emailRevalidationUrl, true));
+            tokens.Add(new Token("Wishlist.URLForUser", wishlistUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(customer, tokens);
+            _eventPublisher.EntityTokensAdded(user, tokens);
         }
 
         /// <summary>
@@ -487,7 +478,7 @@ namespace Nop.Services.Messages
             var additionTokens = new CampaignAdditionTokensAddedEvent();
             _eventPublisher.Publish(additionTokens);
 
-            var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens }).ToList();
+            var allowedTokens = GetListOfAllowedTokens(new[] { TokenGroupNames.SiteTokens, TokenGroupNames.SubscriptionTokens }).ToList();
             allowedTokens.AddRange(additionTokens.AdditionTokens);
 
             return allowedTokens.Distinct();

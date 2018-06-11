@@ -10,7 +10,6 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Logging;
-using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -63,11 +62,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         //check whether database is installed
                         if (DataSettingsManager.DatabaseIsInstalled)
                         {
-                            //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                            //get current user
+                            var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
 
                             //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentUser);
                         }
                     }
                     finally
@@ -97,7 +96,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalPath = context.HttpContext.Request.Path;
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
-                        //store the original paths in special feature, so we can use it later
+                        //site the original paths in special feature, so we can use it later
                         context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
                         {
                             OriginalPathBase = context.HttpContext.Request.PathBase.Value,
@@ -139,7 +138,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
+                    logger.Error("Error 400. Bad request", null, user: workContext.CurrentUser);
                 }
 
                 return Task.CompletedTask;
@@ -178,19 +177,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Set current culture info
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseCulture(this IApplicationBuilder application)
-        {
-            //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            application.UseMiddleware<CultureMiddleware>();
-        }
-
-        /// <summary>
         /// Configure MVC routing
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
@@ -199,7 +185,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             application.UseMvc(routeBuilder =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                //EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
         }
     }

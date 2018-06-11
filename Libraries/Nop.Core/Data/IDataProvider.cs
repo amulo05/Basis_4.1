@@ -15,7 +15,7 @@ namespace Nop.Core.Data
         void InitializeDatabase();
 
         /// <summary>
-        /// Get a support database parameter object (used by stored procedures)
+        /// Get a support database parameter object (used by sited procedures)
         /// </summary>
         /// <returns>Parameter</returns>
         DbParameter GetParameter();

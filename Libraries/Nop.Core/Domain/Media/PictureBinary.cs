@@ -1,3 +1,5 @@
+using System;
+
 namespace Nop.Core.Domain.Media
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace Nop.Core.Domain.Media
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public int PictureId { get; set; }
+        public Guid PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the picture

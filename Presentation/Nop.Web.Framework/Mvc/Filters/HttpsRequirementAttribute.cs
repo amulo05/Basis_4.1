@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private SslRequirement _sslRequirement;
-            private readonly IStoreContext _storeContext;
+            private readonly ISiteContext _siteContext;
             private readonly IWebHelper _webHelper;
             private readonly SecuritySettings _securitySettings;
 
@@ -63,12 +63,12 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public HttpsRequirementFilter(SslRequirement sslRequirement,
-                IStoreContext storeContext,
+                ISiteContext siteContext,
                 IWebHelper webHelper,
                 SecuritySettings securitySettings)
             {
                 this._sslRequirement = sslRequirement;
-                this._storeContext = storeContext;
+                this._siteContext = siteContext;
                 this._webHelper = webHelper;
                 this._securitySettings = securitySettings;
             }
@@ -88,7 +88,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
 
                 //page should be secured, so redirect (permanent) to HTTPS version of page
-                if (useSsl && !currentConnectionSecured && _storeContext.CurrentStore.SslEnabled)
+                if (useSsl && !currentConnectionSecured && _siteContext.CurrentSite.SslEnabled)
                     filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
 
                 //page shouldn't be secured, so redirect (permanent) to HTTP version of page

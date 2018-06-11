@@ -1,6 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 
 namespace Nop.Services.Helpers
 {
@@ -26,7 +26,7 @@ namespace Nop.Services.Helpers
         /// Converts the date and time to current user date and time
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in user time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt);
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in user time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind);
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="dt">The date and time to convert.</param>
         /// <param name="sourceTimeZone">The time zone of dateTime.</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in user time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Services.Helpers
         /// <param name="dt">The date and time to convert.</param>
         /// <param name="sourceTimeZone">The time zone of dateTime.</param>
         /// <param name="destinationTimeZone">The time zone to convert dateTime to.</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in user time zone.</returns>
         DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone, TimeZoneInfo destinationTimeZone);
 
         /// <summary>
@@ -78,16 +78,16 @@ namespace Nop.Services.Helpers
         DateTime ConvertToUtcTime(DateTime dt, TimeZoneInfo sourceTimeZone);
 
         /// <summary>
-        /// Gets a customer time zone
+        /// Gets a user time zone
         /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
-        TimeZoneInfo GetCustomerTimeZone(Customer customer);
+        /// <param name="user">User</param>
+        /// <returns>User time zone; if user is null, then default site time zone</returns>
+        TimeZoneInfo GetUserTimeZone(User user);
 
         /// <summary>
-        /// Gets or sets a default store time zone
+        /// Gets or sets a default site time zone
         /// </summary>
-        TimeZoneInfo DefaultStoreTimeZone { get; set; }
+        TimeZoneInfo DefaultSiteTimeZone { get; set; }
 
         /// <summary>
         /// Gets or sets the current user time zone

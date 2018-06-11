@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Users;
+using Nop.Services.Users;
 
 namespace Nop.WebApi.Controllers
 {
@@ -10,11 +13,29 @@ namespace Nop.WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+
+        #region Fields
+
+        private readonly IUserService _userService;
+        //private readonly IWorkContext _workContext;
+        //private readonly ISiteContext _siteContext;
+
+        #endregion
+
+        #region Ctor
+
+        public ValuesController(IUserService userService)
+        {
+            this._userService = userService;
+        }
+
+        #endregion
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IList<UserRole>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _userService.GetAllUserRoles().ToList();
         }
 
         // GET api/values/5

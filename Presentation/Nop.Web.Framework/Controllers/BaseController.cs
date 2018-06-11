@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Logging;
-using Nop.Services.Stores;
+using Nop.Services.Sites;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
@@ -28,8 +28,6 @@ namespace Nop.Web.Framework.Controllers
     [SignOutFromExternalAuthentication]
     [ValidatePassword]
     [SaveIpAddress]
-    [SaveLastActivity]
-    [SaveLastVisitedPage]
     public abstract class BaseController : Controller
     {
         #region Rendering
@@ -220,8 +218,8 @@ namespace Nop.Web.Framework.Controllers
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var logger = EngineContext.Current.Resolve<ILogger>();
 
-            var customer = workContext.CurrentCustomer;
-            logger.Error(exception.Message, exception, customer);
+            var user = workContext.CurrentUser;
+            logger.Error(exception.Message, exception, user);
         }
 
         /// <summary>
@@ -250,17 +248,6 @@ namespace Nop.Web.Framework.Controllers
                     ViewData[dataKey] = new List<string>();
                 ((List<string>)ViewData[dataKey]).Add(message);
             }
-        }
-
-        /// <summary>
-        /// Display "Edit" (manage) link (in public store)
-        /// </summary>
-        /// <param name="editPageUrl">Edit page URL</param>
-        protected virtual void DisplayEditLink(string editPageUrl)
-        {
-            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-
-            pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }
 
         #endregion

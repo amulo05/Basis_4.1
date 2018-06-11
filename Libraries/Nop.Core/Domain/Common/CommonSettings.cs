@@ -28,9 +28,9 @@ namespace Nop.Core.Domain.Common
         public bool UseSystemEmailForContactUsForm { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use stored procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)
+        /// Gets or sets a value indicating whether to use sited procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)
         /// </summary>
-        public bool UseStoredProcedureForLoadingCategories { get; set; }
+        public bool UseSitedProcedureForLoadingCategories { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether sitemap is enabled

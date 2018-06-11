@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -46,7 +47,7 @@ namespace Nop.Services.Common
         /// <param name="entityId">Entity identifier</param>
         /// <param name="keyGroup">Key group</param>
         /// <returns>Get attributes</returns>
-        IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup);
+        IList<GenericAttribute> GetAttributesForEntity(Guid entityId, string keyGroup);
         
         /// <summary>
         /// Save attribute value
@@ -55,7 +56,7 @@ namespace Nop.Services.Common
         /// <param name="entity">Entity</param>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
-        void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0);
+        /// <param name="siteId">Site identifier; pass 0 if this attribute will be available for all sites</param>
+        void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, Guid siteId = default(Guid));
     }
 }

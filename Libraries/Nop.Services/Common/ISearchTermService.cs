@@ -1,5 +1,6 @@
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using System;
 
 namespace Nop.Services.Common
 {
@@ -19,15 +20,15 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermById(int searchTermId);
+        SearchTerm GetSearchTermById(Guid searchTermId);
 
         /// <summary>
         /// Gets a search term record by keyword
         /// </summary>
         /// <param name="keyword">Search term keyword</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="siteId">Site identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermByKeyword(string keyword, int storeId);
+        SearchTerm GetSearchTermByKeyword(string keyword, Guid siteId);
 
         /// <summary>
         /// Gets a search term statistics

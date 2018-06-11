@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Security;
+using System;
 
 namespace Nop.Services.Security
 {
@@ -21,7 +22,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        AclRecord GetAclRecordById(int aclRecordId);
+        AclRecord GetAclRecordById(Guid aclRecordId);
         
         /// <summary>
         /// Gets ACL records
@@ -41,9 +42,9 @@ namespace Nop.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="customerRoleId">Customer role id</param>
+        /// <param name="userRoleId">User role id</param>
         /// <param name="entity">Entity</param>
-        void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
+        void InsertAclRecord<T>(T entity, Guid userRoleId) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Updates the ACL record
@@ -52,12 +53,12 @@ namespace Nop.Services.Security
         void UpdateAclRecord(AclRecord aclRecord);
 
         /// <summary>
-        /// Find customer role identifiers with granted access
+        /// Find user role identifiers with granted access
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Customer role identifiers</returns>
-        int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported;
+        /// <returns>User role identifiers</returns>
+        Guid[] GetUserRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Authorize ACL permission
@@ -72,8 +73,8 @@ namespace Nop.Services.Security
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported;
+        bool Authorize<T>(T entity, User user) where T : BaseEntity, IAclSupported;
     }
 }

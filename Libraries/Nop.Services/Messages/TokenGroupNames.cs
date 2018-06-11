@@ -6,14 +6,14 @@
     public static partial class TokenGroupNames
     {
         /// <summary>
-        /// Represents tokens with information about the store
+        /// Represents tokens with information about the site
         /// </summary>
-        public const string StoreTokens = "Store tokens";
+        public const string SiteTokens = "Site tokens";
 
         /// <summary>
-        /// Represents tokens with information about the customer
+        /// Represents tokens with information about the user
         /// </summary>
-        public const string CustomerTokens = "Customer tokens";
+        public const string UserTokens = "User tokens";
 
         /// <summary>
         /// Represents tokens with information about the order

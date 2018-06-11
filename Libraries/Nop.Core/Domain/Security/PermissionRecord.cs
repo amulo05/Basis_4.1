@@ -7,7 +7,7 @@ namespace Nop.Core.Domain.Security
     /// </summary>
     public partial class PermissionRecord : BaseEntity
     {
-        private ICollection<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappings;
+        private ICollection<PermissionRecordUserRoleMapping> _permissionRecordUserRoleMappings;
 
         /// <summary>
         /// Gets or sets the permission name
@@ -25,12 +25,12 @@ namespace Nop.Core.Domain.Security
         public string Category { get; set; }
 
         /// <summary>
-        /// Gets or sets the permission record-customer role mappings
+        /// Gets or sets the permission record-user role mappings
         /// </summary>
-        public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
+        public virtual ICollection<PermissionRecordUserRoleMapping> PermissionRecordUserRoleMappings
         {
-            get => _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>());
-            protected set => _permissionRecordCustomerRoleMappings = value;
+            get => _permissionRecordUserRoleMappings ?? (_permissionRecordUserRoleMappings = new List<PermissionRecordUserRoleMapping>());
+            protected set => _permissionRecordUserRoleMappings = value;
         }   
     }
 }

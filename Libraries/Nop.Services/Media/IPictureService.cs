@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Media;
@@ -21,11 +22,11 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <returns>Picture URL</returns>
         string GetDefaultPictureUrl(int targetSize = 0, 
             PictureType defaultPictureType = PictureType.Entity,
-            string storeLocation = null);
+            string siteLocation = null);
 
         /// <summary>
         /// Get a picture URL
@@ -33,13 +34,13 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(int pictureId, 
+        string GetPictureUrl(Guid pictureId, 
             int targetSize = 0,
             bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            string siteLocation = null, 
             PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
@@ -48,13 +49,13 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
         string GetPictureUrl(Picture picture, 
             int targetSize = 0,
             bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            string siteLocation = null, 
             PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace Nop.Services.Media
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+        Picture UpdatePicture(Guid pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
 
@@ -117,7 +118,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <returns>Picture</returns>
-        Picture SetSeoFilename(int pictureId, string seoFilename);
+        Picture SetSeoFilename(Guid pictureId, string seoFilename);
 
         /// <summary>
         /// Validates input picture dimensions
@@ -128,9 +129,9 @@ namespace Nop.Services.Media
         byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
 
         /// <summary>
-        /// Gets or sets a value indicating whether the images should be stored in data base.
+        /// Gets or sets a value indicating whether the images should be sited in data base.
         /// </summary>
-        bool StoreInDb { get; set; }
+        bool SiteInDb { get; set; }
 
         /// <summary>
         /// Get pictures hashes

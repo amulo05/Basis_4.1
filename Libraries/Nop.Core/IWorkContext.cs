@@ -1,4 +1,4 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Users;
 
 namespace Nop.Core
 {
@@ -8,14 +8,14 @@ namespace Nop.Core
     public interface IWorkContext
     {
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets or sets the current user
         /// </summary>
-        Customer CurrentCustomer { get; set; }
+        User CurrentUser { get; set; }
 
         /// <summary>
-        /// Gets the original customer (in case the current one is impersonated)
+        /// Gets the original user (in case the current one is impersonated)
         /// </summary>
-        Customer OriginalCustomerIfImpersonated { get; }
+        User OriginalUserIfImpersonated { get; }
 
         /// <summary>
         /// Gets or sets value indicating whether we're in admin area

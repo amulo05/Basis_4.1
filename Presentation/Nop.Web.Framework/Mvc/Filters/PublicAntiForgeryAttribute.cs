@@ -11,7 +11,7 @@ using Nop.Core.Domain.Security;
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
-    /// Represents a filter attribute that enables anti-forgery feature for the public store
+    /// Represents a filter attribute that enables anti-forgery feature for the public site
     /// </summary>
     public class PublicAntiForgeryAttribute : TypeFilterAttribute
     {
@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         #region Nested filter
 
         /// <summary>
-        /// Represents a filter that enables anti-forgery feature for the public store
+        /// Represents a filter that enables anti-forgery feature for the public site
         /// </summary>
         private class PublicAntiForgeryFilter : ValidateAntiforgeryTokenAuthorizationFilter
         {
@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
-                if (!_securitySettings.EnableXsrfProtectionForPublicStore)
+                if (!_securitySettings.EnableXsrfProtectionForPublicSite)
                     return false;
 
                 //check whether this filter has been overridden for the Action

@@ -44,8 +44,8 @@ namespace Nop.Core.Http
             //whether database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
             {
-                //keep alive page requested (we ignore it to prevent creating a guest customer records)
-                var keepAliveUrl = $"{webHelper.GetStoreLocation()}keepalive/index";
+                //keep alive page requested (we ignore it to prevent creating a guest user records)
+                var keepAliveUrl = $"{webHelper.GetSiteLocation()}keepalive/index";
                 if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }

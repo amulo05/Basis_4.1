@@ -35,18 +35,18 @@ namespace Nop.Core
         bool IsCurrentConnectionSecured();
 
         /// <summary>
-        /// Gets store host location
+        /// Gets site host location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store host location</returns>
-        string GetStoreHost(bool useSsl);
+        /// <returns>Site host location</returns>
+        string GetSiteHost(bool useSsl);
 
         /// <summary>
-        /// Gets store location
+        /// Gets site location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
-        /// <returns>Store location</returns>
-        string GetStoreLocation(bool? useSsl = null);
+        /// <returns>Site location</returns>
+        string GetSiteLocation(bool? useSsl = null);
 
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the CMS engine.

@@ -16,9 +16,9 @@ namespace Nop.Core.Domain.Security
         }
 
         /// <summary>
-        /// Gets or sets the customer role system name
+        /// Gets or sets the user role system name
         /// </summary>
-        public string CustomerRoleSystemName { get; set; }
+        public string UserRoleSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the permissions

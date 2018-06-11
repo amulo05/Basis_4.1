@@ -23,14 +23,14 @@ namespace Nop.Core.Domain.Messages
         public string Body { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
+        /// Gets or sets the site identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
         /// </summary>
-        public int StoreId { get; set; }
+        public int SiteId { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer role identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
+        /// Gets or sets the user role identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
         /// </summary>
-        public int CustomerRoleId { get; set; }
+        public int UserRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

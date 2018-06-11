@@ -3,15 +3,14 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
-using Nop.Services.Customers;
+using Nop.Services.Users;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
-using Nop.Services.Stores;
+using Nop.Services.Sites;
 using Nop.Services.Tasks;
-using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework
 {
@@ -22,7 +21,7 @@ namespace Nop.Web.Framework
     {
         #region Const
 
-        private const string CUSTOMER_COOKIE_NAME = ".Nop.Customer";
+        private const string CUSTOMER_COOKIE_NAME = ".Nop.User";
 
         #endregion
 
@@ -30,14 +29,14 @@ namespace Nop.Web.Framework
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthenticationService _authenticationService;
-        private readonly ICustomerService _customerService;
+        private readonly IUserService _userService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly ISiteContext _siteContext;
+        private readonly ISiteMappingService _siteMappingService;
         private readonly IUserAgentHelper _userAgentHelper;
 
-        private Customer _cachedCustomer;
-        private Customer _originalCustomerIfImpersonated;
+        private User _cachedUser;
+        private User _originalUserIfImpersonated;
 
         #endregion
 
@@ -50,29 +49,29 @@ namespace Nop.Web.Framework
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="authenticationService">Authentication service</param>
         /// <param name="currencyService">Currency service</param>
-        /// <param name="customerService">Customer service</param>
+        /// <param name="userService">User service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="siteContext">Site context</param>
+        /// <param name="siteMappingService">Site mapping service</param>
         /// <param name="userAgentHelper">User gent helper</param>
         /// <param name="vendorService">Vendor service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="taxSettings">Tax settings</param>
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
             IAuthenticationService authenticationService,
-            ICustomerService customerService,
+            IUserService userService,
             IGenericAttributeService genericAttributeService,
-            IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
+            ISiteContext siteContext,
+            ISiteMappingService siteMappingService,
             IUserAgentHelper userAgentHelper)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._authenticationService = authenticationService;
-            this._customerService = customerService;
+            this._userService = userService;
             this._genericAttributeService = genericAttributeService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
+            this._siteContext = siteContext;
+            this._siteMappingService = siteMappingService;
             this._userAgentHelper = userAgentHelper;
         }
 
@@ -81,19 +80,19 @@ namespace Nop.Web.Framework
         #region Utilities
 
         /// <summary>
-        /// Get nop customer cookie
+        /// Get nop user cookie
         /// </summary>
         /// <returns>String value of cookie</returns>
-        protected virtual string GetCustomerCookie()
+        protected virtual string GetUserCookie()
         {
             return _httpContextAccessor.HttpContext?.Request?.Cookies[CUSTOMER_COOKIE_NAME];
         }
 
         /// <summary>
-        /// Set nop customer cookie
+        /// Set nop user cookie
         /// </summary>
-        /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual void SetCustomerCookie(Guid customerGuid)
+        /// <param name="userGuid">Guid of the user</param>
+        protected virtual void SetUserCookie(Guid userGuid)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
@@ -106,7 +105,7 @@ namespace Nop.Web.Framework
             var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
 
             //if passed guid is empty set cookie as expired
-            if (customerGuid == Guid.Empty)
+            if (userGuid == Guid.Empty)
                 cookieExpiresDate = DateTime.Now.AddMonths(-1);
 
             //set new cookie value
@@ -115,53 +114,7 @@ namespace Nop.Web.Framework
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
-        }
-
-        /// <summary>
-        /// Get language from the requested page URL
-        /// </summary>
-        /// <returns>The found language</returns>
-        protected virtual Language GetLanguageFromUrl()
-        {
-            if (_httpContextAccessor.HttpContext?.Request == null)
-                return null;
-
-            //whether the requsted URL is localized
-            var path = _httpContextAccessor.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out Language language))
-                return null;
-
-            //check language availability
-            if (!_storeMappingService.Authorize(language))
-                return null;
-
-            return language;
-        }
-
-        /// <summary>
-        /// Get language from the request
-        /// </summary>
-        /// <returns>The found language</returns>
-        protected virtual Language GetLanguageFromRequest()
-        {
-            if (_httpContextAccessor.HttpContext?.Request == null)
-                return null;
-
-            //get request culture
-            var requestCulture = _httpContextAccessor.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture;
-            if (requestCulture == null)
-                return null;
-
-            //try to get language by culture name
-            var requestLanguage = _languageService.GetAllLanguages().FirstOrDefault(language => 
-                language.LanguageCulture.Equals(requestCulture.Culture.Name, StringComparison.InvariantCultureIgnoreCase));
-
-            //check language availability
-            if (requestLanguage == null || !requestLanguage.Published || !_storeMappingService.Authorize(requestLanguage))
-                return null;
-
-            return requestLanguage;
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, userGuid.ToString(), options);
         }
 
         #endregion
@@ -169,101 +122,101 @@ namespace Nop.Web.Framework
         #region Properties
 
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets or sets the current user
         /// </summary>
-        public virtual Customer CurrentCustomer
+        public virtual User CurrentUser
         {
             get
             {
                 //whether there is a cached value
-                if (_cachedCustomer != null)
-                    return _cachedCustomer;
+                if (_cachedUser != null)
+                    return _cachedUser;
 
-                Customer customer = null;
+                User user = null;
 
                 //check whether request is made by a background (schedule) task
                 if (_httpContextAccessor.HttpContext == null ||
                     _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{TaskManager.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                    //in this case return built-in user record for background task
+                    user = _userService.GetUserBySystemName(SystemUserNames.BackgroundTask);
                 }
 
-                if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
+                if (user == null || user.Deleted || !user.Active || user.RequireReLogin)
                 {
-                    //check whether request is made by a search engine, in this case return built-in customer record for search engines
+                    //check whether request is made by a search engine, in this case return built-in user record for search engines
                     if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                        user = _userService.GetUserBySystemName(SystemUserNames.SearchEngine);
                 }
 
-                if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
+                if (user == null || user.Deleted || !user.Active || user.RequireReLogin)
                 {
                     //try to get registered user
-                    customer = _authenticationService.GetAuthenticatedCustomer();
+                    user = _authenticationService.GetAuthenticatedUser();
                 }
 
-                if (customer != null && !customer.Deleted && customer.Active && !customer.RequireReLogin)
+                if (user != null && !user.Deleted && user.Active && !user.RequireReLogin)
                 {
                     //get impersonate user if required
-                    var impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
-                    if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                    var impersonatedUserId = user.GetAttribute<Guid?>(SystemUserAttributeNames.ImpersonatedUserId);
+                    if (impersonatedUserId.HasValue && impersonatedUserId.Value != default(Guid))
                     {
-                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
-                        if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active && !impersonatedCustomer.RequireReLogin)
+                        var impersonatedUser = _userService.GetUserById(impersonatedUserId.Value);
+                        if (impersonatedUser != null && !impersonatedUser.Deleted && impersonatedUser.Active && !impersonatedUser.RequireReLogin)
                         {
-                            //set impersonated customer
-                            _originalCustomerIfImpersonated = customer;
-                            customer = impersonatedCustomer;
+                            //set impersonated user
+                            _originalUserIfImpersonated = user;
+                            user = impersonatedUser;
                         }
                     }
                 }
 
-                if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
+                if (user == null || user.Deleted || !user.Active || user.RequireReLogin)
                 {
-                    //get guest customer
-                    var customerCookie = GetCustomerCookie();
-                    if (!string.IsNullOrEmpty(customerCookie))
+                    //get guest user
+                    var userCookie = GetUserCookie();
+                    if (!string.IsNullOrEmpty(userCookie))
                     {
-                        if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                        if (Guid.TryParse(userCookie, out Guid userGuid))
                         {
-                            //get customer from cookie (should not be registered)
-                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            if (customerByCookie != null && !customerByCookie.IsRegistered())
-                                customer = customerByCookie;
+                            //get user from cookie (should not be registered)
+                            var userByCookie = _userService.GetUserByGuid(userGuid);
+                            if (userByCookie != null && !userByCookie.IsRegistered())
+                                user = userByCookie;
                         }
                     }
                 }
 
-                if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
+                if (user == null || user.Deleted || !user.Active || user.RequireReLogin)
                 {
                     //create guest if not exists
-                    customer = _customerService.InsertGuestCustomer();
+                    user = _userService.InsertGuestUser();
                 }
 
-                if (!customer.Deleted && customer.Active && !customer.RequireReLogin)
+                if (!user.Deleted && user.Active && !user.RequireReLogin)
                 {
-                    //set customer cookie
-                    SetCustomerCookie(customer.CustomerGuid);
+                    //set user cookie
+                    SetUserCookie(user.UserGuid);
 
-                    //cache the found customer
-                    _cachedCustomer = customer;
+                    //cache the found user
+                    _cachedUser = user;
                 }
 
-                return _cachedCustomer;
+                return _cachedUser;
             }
             set
             {
-                SetCustomerCookie(value.CustomerGuid);
-                _cachedCustomer = value;
+                SetUserCookie(value.UserGuid);
+                _cachedUser = value;
             }
         }
 
         /// <summary>
-        /// Gets the original customer (in case the current one is impersonated)
+        /// Gets the original user (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
+        public virtual User OriginalUserIfImpersonated
         {
-            get { return _originalCustomerIfImpersonated; }
+            get { return _originalUserIfImpersonated; }
         }
 
         /// <summary>

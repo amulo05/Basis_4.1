@@ -1,11 +1,11 @@
-﻿using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Sites;
 
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// Represents a message template
     /// </summary>
-    public partial class MessageTemplate : BaseEntity,  IStoreMappingSupported
+    public partial class MessageTemplate : BaseEntity,  ISiteMappingSupported
     {
         /// <summary>
         /// Gets or sets the name
@@ -53,9 +53,9 @@ namespace Nop.Core.Domain.Messages
         public int EmailAccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain sites
         /// </summary>
-        public bool LimitedToStores { get; set; }
+        public bool LimitedToSites { get; set; }
 
         /// <summary>
         /// Gets or sets the period of message delay

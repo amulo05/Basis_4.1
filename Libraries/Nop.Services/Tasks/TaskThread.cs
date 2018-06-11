@@ -28,8 +28,8 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPath;
+            var siteContext = EngineContext.Current.Resolve<ISiteContext>();
+            _scheduleTaskUrl = siteContext.CurrentSite.Url + TaskManager.ScheduleTaskPath;
         }
 
         internal TaskThread()

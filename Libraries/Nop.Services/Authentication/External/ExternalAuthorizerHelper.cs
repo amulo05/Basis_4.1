@@ -13,7 +13,7 @@ namespace Nop.Services.Authentication.External
         #region Constants
 
         /// <summary>
-        /// Key for store external authentication errors to session
+        /// Key for site external authentication errors to session
         /// </summary>
         private const string EXTERNAL_AUTHENTICATION_ERRORS = "nop.externalauth.errors";
 

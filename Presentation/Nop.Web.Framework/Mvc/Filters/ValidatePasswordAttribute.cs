@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Services.Customers;
+using Nop.Services.Users;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
-    /// Represents filter attribute that validates customer password expiration
+    /// Represents filter attribute that validates user password expiration
     /// </summary>
     public class ValidatePasswordAttribute : TypeFilterAttribute
     {
@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         #region Nested filter
 
         /// <summary>
-        /// Represents a filter that validates customer password expiration
+        /// Represents a filter that validates user password expiration
         /// </summary>
         private class ValidatePasswordFilter : IActionFilter
         {
@@ -76,14 +76,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
                 
                 //don't validate on ChangePassword page
-                if (!(controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                if (!(controllerName.Equals("User", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     //check password expiration
-                    if (_workContext.CurrentCustomer.PasswordIsExpired())
+                    if (_workContext.CurrentUser.PasswordIsExpired())
                     {
                         //redirect to ChangePassword page if expires
-                        var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");
+                        var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("UserChangePassword");
                         context.Result = new RedirectResult(changePasswordUrl);
                     }
                 }

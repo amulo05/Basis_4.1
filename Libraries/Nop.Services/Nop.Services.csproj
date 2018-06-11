@@ -32,8 +32,4 @@
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Installation\" />
-  </ItemGroup>
-
 </Project>

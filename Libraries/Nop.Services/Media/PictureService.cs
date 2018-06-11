@@ -178,7 +178,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary</returns>
-        protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
+        protected virtual byte[] LoadPictureFromFile(Guid pictureId, string mimeType)
         {
             var lastPart = GetFileExtensionFromMimeType(mimeType);
             var fileName = $"{pictureId:0000000}_0.{lastPart}";
@@ -193,7 +193,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
+        protected virtual void SavePictureInFile(Guid pictureId, byte[] pictureBinary, string mimeType)
         {
             var lastPart = GetFileExtensionFromMimeType(mimeType);
             var fileName = $"{pictureId:0000000}_0.{lastPart}";
@@ -259,14 +259,14 @@ namespace Nop.Services.Media
         /// Get picture (thumb) URL 
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <returns>Local picture thumb path</returns>
-        protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
+        protected virtual string GetThumbUrl(string thumbFileName, string siteLocation = null)
         {
-            storeLocation = !string.IsNullOrEmpty(storeLocation)
-                                    ? storeLocation
-                                    : _webHelper.GetStoreLocation();
-            var url = storeLocation + "images/thumbs/";
+            siteLocation = !string.IsNullOrEmpty(siteLocation)
+                                    ? siteLocation
+                                    : _webHelper.GetSiteLocation();
+            var url = siteLocation + "images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -284,7 +284,7 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Get picture local path. Used when images stored on file system (not in the database)
+        /// Get picture local path. Used when images sited on file system (not in the database)
         /// </summary>
         /// <param name="fileName">Filename</param>
         /// <returns>Local picture path</returns>
@@ -425,7 +425,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         public virtual byte[] LoadPictureBinary(Picture picture)
         {
-            return LoadPictureBinary(picture, StoreInDb);
+            return LoadPictureBinary(picture, SiteInDb);
         }
 
         /// <summary>
@@ -433,17 +433,17 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <returns>Picture URL</returns>
         public virtual string GetDefaultPictureUrl(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
-            string storeLocation = null)
+            string siteLocation = null)
         {
             string defaultImageFileName;
             switch (defaultPictureType)
             {
                 case PictureType.Avatar:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "default-avatar.jpg");
+                    defaultImageFileName = _settingService.GetSettingByKey("Media.User.DefaultAvatarImageName", "default-avatar.jpg");
                     break;
                 case PictureType.Entity:
                 default:
@@ -459,9 +459,9 @@ namespace Nop.Services.Media
 
             if (targetSize == 0)
             {
-                var url = (!string.IsNullOrEmpty(storeLocation)
-                                 ? storeLocation
-                                 : _webHelper.GetStoreLocation())
+                var url = (!string.IsNullOrEmpty(siteLocation)
+                                 ? siteLocation
+                                 : _webHelper.GetSiteLocation())
                                  + "images/" + defaultImageFileName;
                 return url;
             }
@@ -483,7 +483,7 @@ namespace Nop.Services.Media
                         SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
                     }
                 }
-                var url = GetThumbUrl(thumbFileName, storeLocation);
+                var url = GetThumbUrl(thumbFileName, siteLocation);
                 return url;
             }
         }
@@ -494,17 +494,17 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(int pictureId,
+        public virtual string GetPictureUrl(Guid pictureId,
             int targetSize = 0,
             bool showDefaultPicture = true,
-            string storeLocation = null,
+            string siteLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            return GetPictureUrl(picture, targetSize, showDefaultPicture, siteLocation, defaultPictureType);
         }
 
         /// <summary>
@@ -513,13 +513,13 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="siteLocation">Site location URL; null to use determine the current site location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
-            string storeLocation = null,
+            string siteLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
             var url = string.Empty;
@@ -530,7 +530,7 @@ namespace Nop.Services.Media
             {
                 if (showDefaultPicture)
                 {
-                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
+                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, siteLocation);
                 }
                 return url;
             }
@@ -607,7 +607,7 @@ namespace Nop.Services.Media
                 }
                 
             }
-            url = GetThumbUrl(thumbFileName, storeLocation);
+            url = GetThumbUrl(thumbFileName, siteLocation);
             return url;
         }
 
@@ -636,9 +636,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual Picture GetPictureById(int pictureId)
+        public virtual Picture GetPictureById(Guid pictureId)
         {
-            if (pictureId == 0)
+            if (pictureId == default(Guid))
                 return null;
 
             return _pictureRepository.GetById(pictureId);
@@ -657,7 +657,7 @@ namespace Nop.Services.Media
             DeletePictureThumbs(picture);
 
             //delete from file system
-            if (!StoreInDb)
+            if (!SiteInDb)
                 DeletePictureOnFileSystem(picture);
 
             //delete from database
@@ -714,9 +714,9 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             _pictureRepository.Insert(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, SiteInDb ? pictureBinary : new byte[0]);
 
-            if (!StoreInDb)
+            if (!SiteInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -737,7 +737,7 @@ namespace Nop.Services.Media
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+        public virtual Picture UpdatePicture(Guid pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true)
         {
@@ -764,9 +764,9 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, SiteInDb ? pictureBinary : new byte[0]);
 
-            if (!StoreInDb)
+            if (!SiteInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -781,7 +781,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <returns>Picture</returns>
-        public virtual Picture SetSeoFilename(int pictureId, string seoFilename)
+        public virtual Picture SetSeoFilename(Guid pictureId, string seoFilename)
         {
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -846,22 +846,22 @@ namespace Nop.Services.Media
         #region Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether the images should be stored in data base.
+        /// Gets or sets a value indicating whether the images should be sited in data base.
         /// </summary>
-        public virtual bool StoreInDb
+        public virtual bool SiteInDb
         {
             get
             {
-                return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
+                return _settingService.GetSettingByKey("Media.Images.SiteInDB", true);
             }
             set
             {
                 //check whether it's a new value
-                if (this.StoreInDb == value)
+                if (this.SiteInDb == value)
                     return;
 
                 //save the new setting value
-                _settingService.SetSetting("Media.Images.StoreInDB", value);
+                _settingService.SetSetting("Media.Images.SiteInDB", value);
 
                 var pageIndex = 0;
                 const int pageSize = 400;

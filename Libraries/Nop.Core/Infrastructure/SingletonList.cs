@@ -5,7 +5,7 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// Provides a singleton list for a certain type.
     /// </summary>
-    /// <typeparam name="T">The type of list to store.</typeparam>
+    /// <typeparam name="T">The type of list to site.</typeparam>
     public class SingletonList<T> : Singleton<IList<T>>
     {
         static SingletonList()

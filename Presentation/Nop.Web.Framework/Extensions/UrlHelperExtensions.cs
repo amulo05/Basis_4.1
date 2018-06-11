@@ -16,8 +16,8 @@ namespace Nop.Web.Framework.Extensions
         public static string LogOn(this IUrlHelper urlHelper, string returnUrl)
         {
             if (!string.IsNullOrEmpty(returnUrl))
-                return urlHelper.Action("Login", "Customer", new { ReturnUrl = returnUrl });
-            return urlHelper.Action("Login", "Customer");
+                return urlHelper.Action("Login", "User", new { ReturnUrl = returnUrl });
+            return urlHelper.Action("Login", "User");
         }
 
         /// <summary>
@@ -29,8 +29,8 @@ namespace Nop.Web.Framework.Extensions
         public static string LogOff(this IUrlHelper urlHelper, string returnUrl)
         {
             if (!string.IsNullOrEmpty(returnUrl))
-                return urlHelper.Action("Logout", "Customer", new { ReturnUrl = returnUrl });
-            return urlHelper.Action("Logout", "Customer");
+                return urlHelper.Action("Logout", "User", new { ReturnUrl = returnUrl });
+            return urlHelper.Action("Logout", "User");
         }
     }
 }

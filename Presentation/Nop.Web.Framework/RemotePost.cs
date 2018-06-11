@@ -141,7 +141,7 @@ namespace Nop.Web.Framework
 
             response.Body.WriteAsync(data, 0, data.Length).Wait();
 
-            //store a value indicating whether POST has been done
+            //site a value indicating whether POST has been done
             _webHelper.IsPostBeingDone = true;
         }
     }

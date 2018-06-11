@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Security;
 using Nop.Data.Extensions;
 using Nop.Services.Events;
@@ -90,9 +90,9 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        public virtual AclRecord GetAclRecordById(int aclRecordId)
+        public virtual AclRecord GetAclRecordById(Guid aclRecordId)
         {
-            if (aclRecordId == 0)
+            if (aclRecordId == default(Guid))
                 return null;
 
             return _aclRecordRepository.GetById(aclRecordId);
@@ -143,15 +143,15 @@ namespace Nop.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="customerRoleId">Customer role id</param>
+        /// <param name="userRoleId">User role id</param>
         /// <param name="entity">Entity</param>
-        public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
+        public virtual void InsertAclRecord<T>(T entity, Guid userRoleId) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            if (customerRoleId == 0)
-                throw new ArgumentOutOfRangeException("customerRoleId");
+            if (userRoleId == default(Guid))
+                throw new ArgumentOutOfRangeException("userRoleId");
 
             var entityId = entity.Id;
             var entityName = entity.GetType().BaseType.Name;
@@ -160,7 +160,7 @@ namespace Nop.Services.Security
             {
                 EntityId = entityId,
                 EntityName = entityName,
-                CustomerRoleId = customerRoleId
+                UserRoleId = userRoleId
             };
 
             InsertAclRecord(aclRecord);
@@ -185,12 +185,12 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
-        /// Find customer role identifiers with granted access
+        /// Find user role identifiers with granted access
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Customer role identifiers</returns>
-        public virtual int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
+        /// <returns>User role identifiers</returns>
+        public virtual Guid[] GetUserRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -204,7 +204,7 @@ namespace Nop.Services.Security
                 var query = from ur in _aclRecordRepository.Table
                             where ur.EntityId == entityId &&
                             ur.EntityName == entityName 
-                            select ur.CustomerRoleId;
+                            select ur.UserRoleId;
                 return query.ToArray();
             });
         }
@@ -217,7 +217,7 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize<T>(T entity) where T : BaseEntity, IAclSupported
         {
-            return Authorize(entity, _workContext.CurrentCustomer);
+            return Authorize(entity, _workContext.CurrentUser);
         }
 
         /// <summary>
@@ -225,21 +225,21 @@ namespace Nop.Services.Security
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported
+        public virtual bool Authorize<T>(T entity, User user) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
                 return false;
 
-            if (customer == null)
+            if (user == null)
                 return false;
 
             if (!entity.SubjectToAcl)
                 return true;
 
-            foreach (var role1 in customer.CustomerRoles.Where(cr => cr.Active))
-                foreach (var role2Id in GetCustomerRoleIdsWithAccess(entity))
+            foreach (var role1 in user.UserRoles.Where(cr => cr.Active))
+                foreach (var role2Id in GetUserRoleIdsWithAccess(entity))
                     if (role1.Id == role2Id)
                         //yes, we have such permission
                         return true;

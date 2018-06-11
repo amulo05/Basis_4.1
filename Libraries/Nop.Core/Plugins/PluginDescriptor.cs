@@ -19,8 +19,8 @@ namespace Nop.Core.Plugins
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();
-            this.LimitedToStores = new List<int>();
-            this.LimitedToCustomerRoles = new List<int>();
+            this.LimitedToSites = new List<int>();
+            this.LimitedToUserRoles = new List<int>();
         }
 
         /// <summary>
@@ -175,16 +175,16 @@ namespace Nop.Core.Plugins
         public virtual string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
+        /// Gets or sets the list of site identifiers in which this plugin is available. If empty, then this plugin is available in all sites
         /// </summary>
-        [JsonProperty(PropertyName = "LimitedToStores")]
-        public virtual IList<int> LimitedToStores { get; set; }
+        [JsonProperty(PropertyName = "LimitedToSites")]
+        public virtual IList<int> LimitedToSites { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of customer role identifiers for which this plugin is available. If empty, then this plugin is available for all ones.
+        /// Gets or sets the list of user role identifiers for which this plugin is available. If empty, then this plugin is available for all ones.
         /// </summary>
-        [JsonProperty(PropertyName = "LimitedToCustomerRoles")]
-        public virtual IList<int> LimitedToCustomerRoles { get; set; }
+        [JsonProperty(PropertyName = "LimitedToUserRoles")]
+        public virtual IList<int> LimitedToUserRoles { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed

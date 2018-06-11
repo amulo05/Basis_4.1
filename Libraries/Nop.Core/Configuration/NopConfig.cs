@@ -62,7 +62,7 @@ namespace Nop.Core.Configuration
         public bool SupportPreviousNopcommerceVersions { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a store owner can install sample data during installation
+        /// Gets or sets a value indicating whether a site owner can install sample data during installation
         /// </summary>
         public bool DisableSampleDataDuringInstallation { get; set; }
         /// <summary>

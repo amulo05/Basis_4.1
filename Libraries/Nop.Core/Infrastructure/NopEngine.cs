@@ -152,10 +152,10 @@ namespace Nop.Core.Infrastructure
             var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
             CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
 
-            //initialize plugins
-            var nopConfig = provider.GetRequiredService<NopConfig>();
-            var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
+            ////initialize plugins
+            //var nopConfig = provider.GetRequiredService<NopConfig>();
+            //var mvcCoreBuilder = services.AddMvcCore();
+            //PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -205,7 +205,7 @@ namespace Nop.Core.Infrastructure
                 RunStartupTasks(typeFinder);
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             //set App_Data path as base data directory (required to create and save SQL Server Compact database file in App_Data folder)
             var fileProvider = Resolve<INopFileProvider>();

@@ -1,4 +1,4 @@
-#region Copyright © 2001-2003 Jean-Claude Manoli [jc@manoli.net]
+#region Copyright ?2001-2003 Jean-Claude Manoli [jc@manoli.net]
 /*
  * Based on code submitted by Mitsugi Ogawa.
  * 
@@ -87,7 +87,7 @@ namespace Nop.Core.Html.CodeFormatter
                                               + "primary print prior privileges proc procedure "
                                               + "public raiserror read reads readtext real reconfigure "
                                               + "recursive ref references referencing relative replication "
-                                              + "restore restrict result return returns revoke right role "
+                                              + "resite restrict result return returns revoke right role "
                                               + "rollback rollup routine row rowcount rowguidcol rows rule "
                                               + "save savepoint schema scope scroll search second section "
                                               + "select sequence session session_user set sets setuser "

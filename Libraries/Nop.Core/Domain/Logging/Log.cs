@@ -1,5 +1,5 @@
 using System;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 
 namespace Nop.Core.Domain.Logging
 {
@@ -29,9 +29,9 @@ namespace Nop.Core.Domain.Logging
         public string IpAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer identifier
+        /// Gets or sets the user identifier
         /// </summary>
-        public int? CustomerId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL
@@ -58,8 +58,8 @@ namespace Nop.Core.Domain.Logging
         }
 
         /// <summary>
-        /// Gets or sets the customer
+        /// Gets or sets the user
         /// </summary>
-        public virtual Customer Customer { get; set; }
+        public virtual User User { get; set; }
     }
 }

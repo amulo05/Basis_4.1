@@ -23,9 +23,9 @@ namespace Nop.Core.Domain.Messages
         public bool Active { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier in which a customer has subscribed to newsletter
+        /// Gets or sets the site identifier in which a user has subscribed to newsletter
         /// </summary>
-        public int StoreId { get; set; }
+        public int SiteId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when subscription was created

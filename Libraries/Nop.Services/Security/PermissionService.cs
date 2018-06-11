@@ -4,9 +4,9 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Security;
-using Nop.Services.Customers;
+using Nop.Services.Users;
 
 namespace Nop.Services.Security
 {
@@ -21,7 +21,7 @@ namespace Nop.Services.Security
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : customer role ID
+        /// {0} : user role ID
         /// {1} : permission system name
         /// </remarks>
         private const string PERMISSIONS_ALLOWED_KEY = "Nop.permission.allowed-{0}-{1}";
@@ -30,9 +30,9 @@ namespace Nop.Services.Security
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : customer role ID
+        /// {0} : user role ID
         /// </remarks>
-        private const string PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY = "Nop.permission.allbycustomerroleid-{0}";
+        private const string PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY = "Nop.permission.allbyuserroleid-{0}";
 
         /// <summary>
         /// Key pattern to clear cache
@@ -44,8 +44,8 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
-        private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
-        private readonly ICustomerService _customerService;
+        private readonly IRepository<PermissionRecordUserRoleMapping> _permissionRecordUserRoleMappingRepository;
+        private readonly IUserService _userService;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -58,23 +58,23 @@ namespace Nop.Services.Security
         /// Ctor
         /// </summary>
         /// <param name="permissionRecordRepository">Permission repository</param>
-        /// <param name="permissionRecordCustomerRoleMappingRepository">Permission -customer role mapping repository</param>
-        /// <param name="customerService">Customer service</param>
+        /// <param name="permissionRecordUserRoleMappingRepository">Permission -user role mapping repository</param>
+        /// <param name="userService">User service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="staticCacheManager">Static cache manager</param>
         public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
-            IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
-            ICustomerService customerService,
+            IRepository<PermissionRecordUserRoleMapping> permissionRecordUserRoleMappingRepository,
+            IUserService userService,
             IWorkContext workContext,
             ICacheManager cacheManager,
             IStaticCacheManager staticCacheManager)
         {
             this._permissionRecordRepository = permissionRecordRepository;
-            this._permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
-            this._customerService = customerService;
+            this._permissionRecordUserRoleMappingRepository = permissionRecordUserRoleMappingRepository;
+            this._userService = userService;
             this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._staticCacheManager = staticCacheManager;
@@ -85,18 +85,18 @@ namespace Nop.Services.Security
         #region Utilities
 
         /// <summary>
-        /// Get permission records by customer role identifier
+        /// Get permission records by user role identifier
         /// </summary>
-        /// <param name="customerRoleId">Customer role identifier</param>
+        /// <param name="userRoleId">User role identifier</param>
         /// <returns>Permissions</returns>
-        protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
+        protected virtual IList<PermissionRecord> GetPermissionRecordsByUserRoleId(Guid userRoleId)
         {
-            var key = string.Format(PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY, customerRoleId);
+            var key = string.Format(PERMISSIONS_ALLBYCUSTOMERTROLEID_KEY, userRoleId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pr in _permissionRecordRepository.Table
-                    join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm.PermissionRecordId
-                    where prcrm.CustomerRoleId == customerRoleId
+                    join prcrm in _permissionRecordUserRoleMappingRepository.Table on pr.Id equals prcrm.PermissionRecordId
+                    where prcrm.UserRoleId == userRoleId
                     orderby pr.Id
                     select pr;
 
@@ -108,17 +108,17 @@ namespace Nop.Services.Security
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customerRole">Customer role</param>
+        /// <param name="userRole">User role</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
+        protected virtual bool Authorize(string permissionRecordSystemName, UserRole userRole)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
             
-            var key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
+            var key = string.Format(PERMISSIONS_ALLOWED_KEY, userRole.Id, permissionRecordSystemName);
             return _staticCacheManager.Get(key, () =>
             {
-                var permissions = GetPermissionRecordsByCustomerRoleId(customerRole.Id);
+                var permissions = GetPermissionRecordsByUserRoleId(userRole.Id);
                 foreach (var permission1 in permissions)
                     if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
@@ -228,33 +228,33 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize(PermissionRecord permission)
         {
-            return Authorize(permission, _workContext.CurrentCustomer);
+            return Authorize(permission, _workContext.CurrentUser);
         }
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(PermissionRecord permission, Customer customer)
+        public virtual bool Authorize(PermissionRecord permission, User user)
         {
             if (permission == null)
                 return false;
 
-            if (customer == null)
+            if (user == null)
                 return false;
 
             //old implementation of Authorize method
-            //var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
-            //foreach (var role in customerRoles)
+            //var userRoles = user.UserRoles.Where(cr => cr.Active);
+            //foreach (var role in userRoles)
             //    foreach (var permission1 in role.PermissionRecords)
             //        if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))
             //            return true;
 
             //return false;
 
-            return Authorize(permission.SystemName, customer);
+            return Authorize(permission.SystemName, user);
         }
 
         /// <summary>
@@ -264,22 +264,22 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize(string permissionRecordSystemName)
         {
-            return Authorize(permissionRecordSystemName, _workContext.CurrentCustomer);
+            return Authorize(permissionRecordSystemName, _workContext.CurrentUser);
         }
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName, Customer customer)
+        public virtual bool Authorize(string permissionRecordSystemName, User user)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
-            foreach (var role in customerRoles)
+            var userRoles = user.UserRoles.Where(cr => cr.Active);
+            foreach (var role in userRoles)
                 if (Authorize(permissionRecordSystemName, role))
                     //yes, we have such permission
                     return true;

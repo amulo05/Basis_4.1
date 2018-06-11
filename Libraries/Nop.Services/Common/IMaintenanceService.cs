@@ -34,10 +34,10 @@ namespace Nop.Services.Common
         void BackupDatabase();
 
         /// <summary>
-        /// Restores the database from a backup
+        /// Resites the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        void RestoreDatabase(string backupFileName);
+        void ResiteDatabase(string backupFileName);
 
         /// <summary>
         /// Returns the path to the backup file

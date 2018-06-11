@@ -1,30 +1,30 @@
 ﻿using Nop.Core;
-using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Sites;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories
 {
     /// <summary>
-    /// Represents the store mapping supported model factory
+    /// Represents the site mapping supported model factory
     /// </summary>
-    public partial interface IStoreMappingSupportedModelFactory
+    public partial interface ISiteMappingSupportedModelFactory
     {
         /// <summary>
-        /// Prepare selected and all available stores for the passed model
+        /// Prepare selected and all available sites for the passed model
         /// </summary>
-        /// <typeparam name="TModel">Store mapping supported model type</typeparam>
+        /// <typeparam name="TModel">Site mapping supported model type</typeparam>
         /// <param name="model">Model</param>
-        void PrepareModelStores<TModel>(TModel model) where TModel : IStoreMappingSupportedModel;
+        void PrepareModelSites<TModel>(TModel model) where TModel : ISiteMappingSupportedModel;
 
         /// <summary>
-        /// Prepare selected and all available stores for the passed model by store mappings
+        /// Prepare selected and all available sites for the passed model by site mappings
         /// </summary>
-        /// <typeparam name="TModel">Store mapping supported model type</typeparam>
-        /// <typeparam name="TEntity">Store mapping supported entity type</typeparam>
+        /// <typeparam name="TModel">Site mapping supported model type</typeparam>
+        /// <typeparam name="TEntity">Site mapping supported entity type</typeparam>
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
-        /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        void PrepareModelStores<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
-            where TModel : IStoreMappingSupportedModel where TEntity : BaseEntity, IStoreMappingSupported;
+        /// <param name="ignoreSiteMappings">Whether to ignore existing site mappings</param>
+        void PrepareModelSites<TModel, TEntity>(TModel model, TEntity entity, bool ignoreSiteMappings)
+            where TModel : ISiteMappingSupportedModel where TEntity : BaseEntity, ISiteMappingSupported;
     }
 }

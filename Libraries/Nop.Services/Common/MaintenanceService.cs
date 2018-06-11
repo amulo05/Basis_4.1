@@ -136,10 +136,10 @@ namespace Nop.Services.Common
         }
 
         /// <summary>
-        /// Restores the database from a backup
+        /// Resites the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        public virtual void ResiteDatabase(string backupFileName)
         {
             CheckBackupSupported();
 

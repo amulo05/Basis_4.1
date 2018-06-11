@@ -111,9 +111,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
-        public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
+        public virtual QueuedEmail GetQueuedEmailById(Guid queuedEmailId)
         {
-            if (queuedEmailId == 0)
+            if (queuedEmailId == default(Guid))
                 return null;
 
             return _queuedEmailRepository.GetById(queuedEmailId);
@@ -125,7 +125,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailIds">queued email identifiers</param>
         /// <returns>Queued emails</returns>
-        public virtual IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds)
+        public virtual IList<QueuedEmail> GetQueuedEmailsByIds(Guid[] queuedEmailIds)
         {
             if (queuedEmailIds == null || queuedEmailIds.Length == 0)
                 return new List<QueuedEmail>();

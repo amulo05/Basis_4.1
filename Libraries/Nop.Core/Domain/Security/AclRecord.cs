@@ -1,4 +1,5 @@
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
+using System;
 
 namespace Nop.Core.Domain.Security
 {
@@ -10,7 +11,7 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public Guid EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name
@@ -18,13 +19,13 @@ namespace Nop.Core.Domain.Security
         public string EntityName { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer role identifier
+        /// Gets or sets the user role identifier
         /// </summary>
-        public int CustomerRoleId { get; set; }
+        public Guid UserRoleId { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer role
+        /// Gets or sets the user role
         /// </summary>
-        public virtual CustomerRole CustomerRole { get; set; }
+        public virtual UserRole UserRole { get; set; }
     }
 }

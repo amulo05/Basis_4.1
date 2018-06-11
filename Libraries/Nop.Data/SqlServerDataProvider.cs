@@ -25,7 +25,7 @@ namespace Nop.Data
             var context = EngineContext.Current.Resolve<IDbContext>();
 
             //check some of table names to ensure that we have nopCommerce 2.00+ installed
-            var tableNamesToValidate = new List<string> { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
+            var tableNamesToValidate = new List<string> { "User", "Discount", "Order", "Product", "ShoppingCartItem" };
             var existingTableNames = context
                 .QueryFromSql<StringQueryType>("SELECT table_name AS Value FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'")
                 .Select(stringValue => stringValue.Value).ToList();
@@ -43,12 +43,12 @@ namespace Nop.Data
             //create indexes
             context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerIndexesFilePath));
 
-            //create stored procedures 
-            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerStoredProceduresFilePath));
+            //create sited procedures 
+            context.ExecuteSqlScriptFromFile(fileProvider.MapPath(this.SqlServerSitedProceduresFilePath));
         }
 
         /// <summary>
-        /// Get a support database parameter object (used by stored procedures)
+        /// Get a support database parameter object (used by sited procedures)
         /// </summary>
         /// <returns>Parameter</returns>
         public virtual DbParameter GetParameter()
@@ -76,9 +76,9 @@ namespace Nop.Data
         protected virtual string SqlServerIndexesFilePath => "~/App_Data/Install/SqlServer.Indexes.sql";
 
         /// <summary>
-        /// Gets a path to the file that contains script to create SQL Server stored procedures
+        /// Gets a path to the file that contains script to create SQL Server sited procedures
         /// </summary>
-        protected virtual string SqlServerStoredProceduresFilePath => "~/App_Data/Install/SqlServer.StoredProcedures.sql";
+        protected virtual string SqlServerSitedProceduresFilePath => "~/App_Data/Install/SqlServer.SitedProcedures.sql";
 
         #endregion
     }

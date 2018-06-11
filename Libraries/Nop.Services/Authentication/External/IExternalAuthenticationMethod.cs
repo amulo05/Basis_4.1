@@ -8,7 +8,7 @@ namespace Nop.Services.Authentication.External
     public partial interface IExternalAuthenticationMethod : IPlugin
     {
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store
+        /// Gets a name of a view component for displaying plugin in public site
         /// </summary>
         /// <returns>View component name</returns>
         string GetPublicViewComponentName();

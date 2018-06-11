@@ -1,4 +1,6 @@
-﻿namespace Nop.Core.Domain.Common
+﻿using System;
+
+namespace Nop.Core.Domain.Common
 {
     /// <summary>
     /// Search term record (for statistics)
@@ -11,9 +13,9 @@
         public string Keyword { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier
+        /// Gets or sets the site identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public Guid SiteId { get; set; }
 
         /// <summary>
         /// Gets or sets search count

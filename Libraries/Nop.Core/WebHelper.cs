@@ -186,11 +186,11 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return string.Empty;
             
-            //get store location
-            var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
+            //get site location
+            var siteLocation = GetSiteLocation(useSsl ?? IsCurrentConnectionSecured());
 
             //add local path to the URL
-            var pageUrl = $"{storeLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
+            var pageUrl = $"{siteLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
 
             //add query string to the URL
             if (includeQueryString)
@@ -225,11 +225,11 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Gets store host location
+        /// Gets site host location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store host location</returns>
-        public virtual string GetStoreHost(bool useSsl)
+        /// <returns>Site host location</returns>
+        public virtual string GetSiteHost(bool useSsl)
         {
             if (!IsRequestAvailable())
                 return string.Empty;
@@ -240,43 +240,43 @@ namespace Nop.Core
                 return string.Empty;
 
             //add scheme to the URL
-            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}://{hostHeader.FirstOrDefault()}";
+            var siteHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}://{hostHeader.FirstOrDefault()}";
             
             //ensure that host is ended with slash
-            storeHost = $"{storeHost.TrimEnd('/')}/";
+            siteHost = $"{siteHost.TrimEnd('/')}/";
 
-            return storeHost;
+            return siteHost;
         }
 
         /// <summary>
-        /// Gets store location
+        /// Gets site location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
-        /// <returns>Store location</returns>
-        public virtual string GetStoreLocation(bool? useSsl = null)
+        /// <returns>Site location</returns>
+        public virtual string GetSiteLocation(bool? useSsl = null)
         {
-            var storeLocation = string.Empty;
+            var siteLocation = string.Empty;
 
-            //get store host
-            var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
-            if (!string.IsNullOrEmpty(storeHost))
+            //get site host
+            var siteHost = GetSiteHost(useSsl ?? IsCurrentConnectionSecured());
+            if (!string.IsNullOrEmpty(siteHost))
             {
                 //add application path base if exists
-                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+                siteLocation = IsRequestAvailable() ? $"{siteHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : siteHost;
             }
 
-            //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(storeHost) && DataSettingsManager.DatabaseIsInstalled)
+            //if host is empty (it is possible only when HttpContext is not available), use URL of a site entity configured in admin area
+            if (string.IsNullOrEmpty(siteHost) && DataSettingsManager.DatabaseIsInstalled)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
-                    ?? throw new Exception("Current store cannot be loaded");
+                siteLocation = EngineContext.Current.Resolve<ISiteContext>().CurrentSite?.Url
+                    ?? throw new Exception("Current site cannot be loaded");
             }
 
             //ensure that URL is ended with slash
-            storeLocation = $"{storeLocation.TrimEnd('/')}/";
+            siteLocation = $"{siteLocation.TrimEnd('/')}/";
 
-            return storeLocation;
+            return siteLocation;
         }
         
         /// <summary>

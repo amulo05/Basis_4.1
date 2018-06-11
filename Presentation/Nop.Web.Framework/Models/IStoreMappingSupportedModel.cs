@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Framework.Models
 {
     /// <summary>
-    /// Represents the store mapping supported model
+    /// Represents the site mapping supported model
     /// </summary>
-    public partial interface IStoreMappingSupportedModel
+    public partial interface ISiteMappingSupportedModel
     {
         #region Properties
 
         /// <summary>
-        /// Gets or sets identifiers of the selected stores
+        /// Gets or sets identifiers of the selected sites
         /// </summary>
-        IList<int> SelectedStoreIds { get; set; }
+        IList<Guid> SelectedSiteIds { get; set; }
 
         /// <summary>
-        /// Gets or sets items for the all available stores
+        /// Gets or sets items for the all available sites
         /// </summary>
-        IList<SelectListItem> AvailableStores { get; set; }
+        IList<SelectListItem> AvailableSites { get; set; }
 
         #endregion
     }

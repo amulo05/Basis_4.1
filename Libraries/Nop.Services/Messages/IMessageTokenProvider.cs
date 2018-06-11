@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Sites;
 
 namespace Nop.Services.Messages
 {
@@ -11,19 +11,19 @@ namespace Nop.Services.Messages
     public partial interface IMessageTokenProvider
     {
         /// <summary>
-        /// Add store tokens
+        /// Add site tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="store">Store</param>
+        /// <param name="site">Site</param>
         /// <param name="emailAccount">Email account</param>
-        void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount);
+        void AddSiteTokens(IList<Token> tokens, Site site, EmailAccount emailAccount);
 
         /// <summary>
-        /// Add customer tokens
+        /// Add user tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer</param>
-        void AddCustomerTokens(IList<Token> tokens, Customer customer);
+        /// <param name="user">User</param>
+        void AddUserTokens(IList<Token> tokens, User user);
 
         /// <summary>
         /// Get collection of allowed (supported) message tokens for campaigns

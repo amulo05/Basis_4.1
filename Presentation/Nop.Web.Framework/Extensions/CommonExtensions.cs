@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Extensions
@@ -14,18 +13,6 @@ namespace Nop.Web.Framework.Extensions
     /// </summary>
     public static class CommonExtensions
     {
-        /// <summary>
-        /// In-memory paging of entities (models)
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="current">Entities (models)</param>
-        /// <param name="command">Command (paging details)</param>
-        /// <returns>Paged entities (models)</returns>
-        public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, DataSourceRequest command)
-        {
-            return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
-        }
-
         /// <summary>
         /// In-memory paging of objects
         /// </summary>

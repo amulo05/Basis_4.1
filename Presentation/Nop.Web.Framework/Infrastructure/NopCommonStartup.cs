@@ -47,9 +47,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add localization
             services.AddLocalization();
-
-            //add theme support
-            services.AddThemes();
         }
 
         /// <summary>
@@ -89,7 +86,7 @@ namespace Nop.Web.Framework.Infrastructure
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
                 }
             });
-            
+
             //plugins
             var staticFileOptions = new StaticFileOptions
             {
@@ -102,7 +99,7 @@ namespace Nop.Web.Framework.Infrastructure
                             nopConfig.StaticFilesCacheControl);
                 }
             };
-            //whether database is installed
+            whether database is installed
             if (DataSettingsManager.DatabaseIsInstalled)
             {
                 var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
@@ -124,10 +121,10 @@ namespace Nop.Web.Framework.Infrastructure
             }
             application.UseStaticFiles(staticFileOptions);
 
-            //add support for backups
+            add support for backups
             var provider = new FileExtensionContentTypeProvider
             {
-                Mappings = {[".bak"] = MimeTypes.ApplicationOctetStream}
+                Mappings = { [".bak"] = MimeTypes.ApplicationOctetStream }
             };
 
             application.UseStaticFiles(new StaticFileOptions
@@ -136,12 +133,6 @@ namespace Nop.Web.Framework.Infrastructure
                 RequestPath = new PathString("/db_backups"),
                 ContentTypeProvider = provider
             });
-
-            //check whether requested page is keep alive page
-            application.UseKeepAlive();
-
-            //check whether database is installed
-            application.UseInstallUrl();
 
             //use HTTP session
             application.UseSession();

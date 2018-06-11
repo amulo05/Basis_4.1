@@ -35,7 +35,7 @@ namespace Nop.Services.Common
         /// </summary>
         public void Execute()
         {
-            var keepAliveUrl = $"{_webHelper.GetStoreLocation()}keepalive/index";
+            var keepAliveUrl = $"{_webHelper.GetSiteLocation()}keepalive/index";
             using (var wc = new WebClient())
             {
                 wc.DownloadString(keepAliveUrl);

@@ -66,10 +66,10 @@ namespace Nop.Services.Configuration
         [Serializable]
         public class SettingForCaching
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
             public string Name { get; set; }
             public string Value { get; set; }
-            public int StoreId { get; set; }
+            public Guid SiteId { get; set; }
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Nop.Services.Configuration
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
                 var query = from s in _settingRepository.TableNoTracking
-                            orderby s.Name, s.StoreId
+                            orderby s.Name, s.SiteId
                             select s;
                 var settings = query.ToList();
                 var dictionary = new Dictionary<string, IList<SettingForCaching>>();
@@ -101,7 +101,7 @@ namespace Nop.Services.Configuration
                                 Id = s.Id,
                                 Name = s.Name,
                                 Value = s.Value,
-                                StoreId = s.StoreId
+                                SiteId = s.SiteId
                             };
                     if (!dictionary.ContainsKey(resourceName))
                     {
@@ -114,7 +114,7 @@ namespace Nop.Services.Configuration
                     else
                     {
                         //already added
-                        //most probably it's the setting with the same name but for some certain store (storeId > 0)
+                        //most probably it's the setting with the same name but for some certain site (siteId > 0)
                         dictionary[resourceName].Add(settingForCaching);
                     }
                 }
@@ -128,9 +128,9 @@ namespace Nop.Services.Configuration
         /// <param name="type">Type</param>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="siteId">Site identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true)
+        protected virtual void SetSetting(Type type, string key, object value, Guid siteId = default(Guid), bool clearCache = true)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -139,7 +139,7 @@ namespace Nop.Services.Configuration
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+                allSettings[key].FirstOrDefault(x => x.SiteId == siteId) : null;
             if (settingForCaching != null)
             {
                 //update
@@ -154,7 +154,7 @@ namespace Nop.Services.Configuration
                 {
                     Name = key,
                     Value = valueStr,
-                    StoreId = storeId
+                    SiteId = siteId
                 };
                 InsertSetting(setting, clearCache);
             }
@@ -248,9 +248,9 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSettingById(int settingId)
+        public virtual Setting GetSettingById(Guid settingId)
         {
-            if (settingId == 0)
+            if (settingId == default(Guid))
                 return null;
 
             return _settingRepository.GetById(settingId);
@@ -260,10 +260,10 @@ namespace Nop.Services.Configuration
         /// Get setting by key
         /// </summary>
         /// <param name="key">Key</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
+        /// <param name="siteId">Site identifier</param>
+        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all sites) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
+        public virtual Setting GetSetting(string key, Guid siteId = default(Guid), bool loadSharedValueIfNotFound = false)
         {
             if (string.IsNullOrEmpty(key))
                 return null;
@@ -273,11 +273,11 @@ namespace Nop.Services.Configuration
             if (settings.ContainsKey(key))
             {
                 var settingsByKey = settings[key];
-                var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
+                var setting = settingsByKey.FirstOrDefault(x => x.SiteId == siteId);
 
                 //load shared value?
-                if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
+                if (setting == null && siteId != default(Guid) && loadSharedValueIfNotFound)
+                    setting = settingsByKey.FirstOrDefault(x => x.SiteId == default(Guid));
 
                 if (setting != null)
                     return GetSettingById(setting.Id);
@@ -292,11 +292,11 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
+        /// <param name="siteId">Site identifier</param>
+        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all sites) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), 
-            int storeId = 0, bool loadSharedValueIfNotFound = false)
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T),
+            Guid siteId = default(Guid), bool loadSharedValueIfNotFound = false)
         {
             if (string.IsNullOrEmpty(key))
                 return defaultValue;
@@ -306,11 +306,11 @@ namespace Nop.Services.Configuration
             if (settings.ContainsKey(key))
             {
                 var settingsByKey = settings[key];
-                var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
+                var setting = settingsByKey.FirstOrDefault(x => x.SiteId == siteId);
 
                 //load shared value?
-                if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
+                if (setting == null && siteId != default(Guid) && loadSharedValueIfNotFound)
+                    setting = settingsByKey.FirstOrDefault(x => x.SiteId == default(Guid));
 
                 if (setting != null)
                     return CommonHelper.To<T>(setting.Value);
@@ -325,11 +325,11 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="siteId">Site identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
+        public virtual void SetSetting<T>(string key, T value, Guid siteId = default(Guid), bool clearCache = true)
         {
-            SetSetting(typeof(T), key, value, storeId, clearCache);
+            SetSetting(typeof(T), key, value, siteId, clearCache);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Nop.Services.Configuration
         public virtual IList<Setting> GetAllSettings()
         {
             var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
+                        orderby s.Name, s.SiteId
                         select s;
             var settings = query.ToList();
             return settings;
@@ -352,15 +352,15 @@ namespace Nop.Services.Configuration
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="settings">Entity</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="siteId">Site identifier</param>
         /// <returns>true -setting exists; false - does not exist</returns>
         public virtual bool SettingExists<T, TPropType>(T settings, 
-            Expression<Func<T, TPropType>> keySelector, int storeId = 0) 
+            Expression<Func<T, TPropType>> keySelector, Guid siteId = default(Guid)) 
             where T : ISettings, new()
         {
             var key = settings.GetSettingKey(keySelector);
 
-            var setting = GetSettingByKey<string>(key, storeId: storeId);
+            var setting = GetSettingByKey<string>(key, siteId: siteId);
             return setting != null;
         }
 
@@ -368,17 +368,17 @@ namespace Nop.Services.Configuration
         /// Load settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store identifier for which settings should be loaded</param>
-        public virtual T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
+        /// <param name="siteId">Site identifier for which settings should be loaded</param>
+        public virtual T LoadSetting<T>(Guid siteId = default(Guid)) where T : ISettings, new()
         {
-            return (T)LoadSetting(typeof(T), storeId);
+            return (T)LoadSetting(typeof(T), siteId);
         }
         /// <summary>
         /// Load settings
         /// </summary>
         /// <param name="type">Type</param>
-        /// <param name="storeId">Store identifier for which settings should be loaded</param>
-        public virtual ISettings LoadSetting(Type type, int storeId = 0)
+        /// <param name="siteId">Site identifier for which settings should be loaded</param>
+        public virtual ISettings LoadSetting(Type type, Guid siteId = default(Guid))
         {
             var settings = Activator.CreateInstance(type);
 
@@ -389,8 +389,8 @@ namespace Nop.Services.Configuration
                     continue;
 
                 var key = type.Name + "." + prop.Name;
-                //load by store
-                var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
+                //load by site
+                var setting = GetSettingByKey<string>(key, siteId: siteId, loadSharedValueIfNotFound: true);
                 if (setting == null)
                     continue;
 
@@ -413,9 +413,9 @@ namespace Nop.Services.Configuration
         /// Save settings object
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="siteId">Site identifier</param>
         /// <param name="settings">Setting instance</param>
-        public virtual void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new()
+        public virtual void SaveSetting<T>(T settings, Guid siteId = default(Guid)) where T : ISettings, new()
         {
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -432,9 +432,9 @@ namespace Nop.Services.Configuration
                 var key = typeof(T).Name + "." + prop.Name;
                 var value = prop.GetValue(settings, null);
                 if (value != null)
-                    SetSetting(prop.PropertyType, key, value, storeId, false);
+                    SetSetting(prop.PropertyType, key, value, siteId, false);
                 else
-                    SetSetting(key, "", storeId, false);
+                    SetSetting(key, "", siteId, false);
             }
 
             //and now clear cache
@@ -448,11 +448,11 @@ namespace Nop.Services.Configuration
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="storeId">Store ID</param>
+        /// <param name="siteId">Site ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            int storeId = 0, bool clearCache = true) where T : ISettings, new()
+            Guid siteId = default(Guid), bool clearCache = true) where T : ISettings, new()
         {
             var member = keySelector.Body as MemberExpression;
             if (member == null)
@@ -473,29 +473,29 @@ namespace Nop.Services.Configuration
             var key = settings.GetSettingKey(keySelector);
             var value = (TPropType)propInfo.GetValue(settings, null);
             if (value != null)
-                SetSetting(key, value, storeId, clearCache);
+                SetSetting(key, value, siteId, clearCache);
             else
-                SetSetting(key, "", storeId, clearCache);
+                SetSetting(key, "", siteId, clearCache);
         }
 
         /// <summary>
-        /// Save settings object (per store). If the setting is not overridden per storem then it'll be delete
+        /// Save settings object (per site). If the setting is not overridden per sitem then it'll be delete
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="overrideForStore">A value indicating whether to setting is overridden in some store</param>
-        /// <param name="storeId">Store ID</param>
+        /// <param name="overrideForSite">A value indicating whether to setting is overridden in some site</param>
+        /// <param name="siteId">Site ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void SaveSettingOverridablePerStore<T, TPropType>(T settings,
+        public virtual void SaveSettingOverridablePerSite<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new()
+            bool overrideForSite, Guid siteId = default(Guid), bool clearCache = true) where T : ISettings, new()
         {
-            if (overrideForStore || storeId == 0)
-                SaveSetting(settings, keySelector, storeId, clearCache);
-            else if (storeId > 0)
-                DeleteSetting(settings, keySelector, storeId);
+            if (overrideForSite || siteId == default(Guid))
+                SaveSetting(settings, keySelector, siteId, clearCache);
+            else if (siteId != default(Guid))
+                DeleteSetting(settings, keySelector, siteId);
         }
 
         /// <summary>
@@ -522,16 +522,16 @@ namespace Nop.Services.Configuration
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="storeId">Store ID</param>
+        /// <param name="siteId">Site ID</param>
         public virtual void DeleteSetting<T, TPropType>(T settings,
-            Expression<Func<T, TPropType>> keySelector, int storeId = 0) where T : ISettings, new()
+            Expression<Func<T, TPropType>> keySelector, Guid siteId = default(Guid)) where T : ISettings, new()
         {
             var key = settings.GetSettingKey(keySelector);
             key = key.Trim().ToLowerInvariant();
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ?
-                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+                allSettings[key].FirstOrDefault(x => x.SiteId == siteId) : null;
             if (settingForCaching != null)
             {
                 //update

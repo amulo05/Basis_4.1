@@ -1,3 +1,5 @@
+using System;
+
 namespace Nop.Core.Domain.Common
 {
     /// <summary>
@@ -8,7 +10,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public Guid EntityId { get; set; }
         
         /// <summary>
         /// Gets or sets the key group
@@ -26,8 +28,8 @@ namespace Nop.Core.Domain.Common
         public string Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier
+        /// Gets or sets the site identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public Guid SiteId { get; set; }
     }
 }

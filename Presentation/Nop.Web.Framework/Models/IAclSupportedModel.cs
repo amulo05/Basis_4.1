@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Framework.Models
@@ -11,14 +12,14 @@ namespace Nop.Web.Framework.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets identifiers of the selected customer roles
+        /// Gets or sets identifiers of the selected user roles
         /// </summary>
-        IList<int> SelectedCustomerRoleIds { get; set; }
+        IList<Guid> SelectedUserRoleIds { get; set; }
 
         /// <summary>
-        /// Gets or sets items for the all available customer roles
+        /// Gets or sets items for the all available user roles
         /// </summary>
-        IList<SelectListItem> AvailableCustomerRoles { get; set; }
+        IList<SelectListItem> AvailableUserRoles { get; set; }
 
         #endregion
     }

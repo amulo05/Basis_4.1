@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Users;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Services.Logging
@@ -54,14 +54,14 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        Log GetLogById(int logId);
+        Log GetLogById(Guid logId);
 
         /// <summary>
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        IList<Log> GetLogByIds(int[] logIds);
+        IList<Log> GetLogByIds(Guid[] logIds);
 
         /// <summary>
         /// Inserts a log item
@@ -69,8 +69,8 @@ namespace Nop.Services.Logging
         /// <param name="logLevel">Log level</param>
         /// <param name="shortMessage">The short message</param>
         /// <param name="fullMessage">The full message</param>
-        /// <param name="customer">The customer to associate log record with</param>
+        /// <param name="user">The user to associate log record with</param>
         /// <returns>A log item</returns>
-        Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+        Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", User user = null);
     }
 }
