@@ -15,8 +15,8 @@ namespace Nop.Services.Users
         /// <summary>
         /// Gets all users
         /// </summary>
-        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="createdFrom">Created date from (UTC); null to load all records</param>
+        /// <param name="createdTo">Created date to (UTC); null to load all records</param>
         /// <param name="userRoleIds">A list of user role identifiers to filter by (at least one match); pass null or empty list in order to load all users; </param>
         /// <param name="email">Email; null to load all users</param>
         /// <param name="username">Username; null to load all users</param>
@@ -27,8 +27,8 @@ namespace Nop.Services.Users
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Users</returns>
-        IPagedList<User> GetAllUsers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null,
+        IPagedList<User> GetAllUsers(DateTime? createdFrom = null,
+            DateTime? createdTo = null,
             Guid[] userRoleIds = null, string email = null, string username = null,
             string ipAddress = null, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
@@ -36,12 +36,12 @@ namespace Nop.Services.Users
         /// <summary>
         /// Gets online users
         /// </summary>
-        /// <param name="lastActivityFromUtc">User last activity date (from)</param>
+        /// <param name="lastActivityFrom">User last activity date (from)</param>
         /// <param name="userRoleIds">A list of user role identifiers to filter by (at least one match); pass null or empty list in order to load all users; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Users</returns>
-        IPagedList<User> GetOnlineUsers(DateTime lastActivityFromUtc,
+        IPagedList<User> GetOnlineUsers(DateTime lastActivityFrom,
             Guid[] userRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -63,13 +63,6 @@ namespace Nop.Services.Users
         /// <param name="userIds">User identifiers</param>
         /// <returns>Users</returns>
         IList<User> GetUsersByIds(Guid[] userIds);
-        
-        /// <summary>
-        /// Gets a user by GUID
-        /// </summary>
-        /// <param name="userGuid">User GUID</param>
-        /// <returns>A user</returns>
-        User GetUserByGuid(Guid userGuid);
 
         /// <summary>
         /// Get user by email
@@ -113,11 +106,11 @@ namespace Nop.Services.Users
         /// <summary>
         /// Delete guest user records
         /// </summary>
-        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="createdFrom">Created date from (UTC); null to load all records</param>
+        /// <param name="createdTo">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete users only without shopping cart</param>
         /// <returns>Number of deleted users</returns>
-        int DeleteGuestUsers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
+        int DeleteGuestUsers(DateTime? createdFrom, DateTime? createdTo, bool onlyWithoutShoppingCart);
 
         #endregion
 

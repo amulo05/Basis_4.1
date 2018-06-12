@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.Extensions
         {
             var result = "";
 
-            var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
+            var ts = new TimeSpan(DateTime.Now.Ticks - source.Ticks);
             var delta = ts.TotalSeconds;
 
             if (delta > 0)
@@ -121,10 +121,6 @@ namespace Nop.Web.Framework.Extensions
             else
             {
                 var tmp1 = source;
-                if (convertToUserTime)
-                {
-                    tmp1 = EngineContext.Current.Resolve<IDateTimeHelper>().ConvertToUserTime(tmp1, DateTimeKind.Utc);
-                }
                 //default formatting
                 if (!string.IsNullOrEmpty(defaultFormat))
                 {

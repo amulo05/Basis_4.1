@@ -70,11 +70,11 @@ namespace Nop.Services.Tasks
             if (task == null)
                 return;
 
-            ScheduleTask.LastStartUtc = DateTime.UtcNow;
+            ScheduleTask.LastStart = DateTime.Now;
             //update appropriate datetime properties
             scheduleTaskService.UpdateTask(ScheduleTask);
             task.Execute();
-            ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
+            ScheduleTask.LastEnd = ScheduleTask.LastSuccess = DateTime.Now;
             //update appropriate datetime properties
             scheduleTaskService.UpdateTask(ScheduleTask);
         }
@@ -87,17 +87,17 @@ namespace Nop.Services.Tasks
         protected virtual bool IsTaskAlreadyRunning(ScheduleTask scheduleTask)
         {
             //task run for the first time
-            if (!scheduleTask.LastStartUtc.HasValue && !scheduleTask.LastEndUtc.HasValue)
+            if (!scheduleTask.LastStart.HasValue && !scheduleTask.LastEnd.HasValue)
                 return false;
 
-            var lastStartUtc = scheduleTask.LastStartUtc ?? DateTime.UtcNow;
+            var lastStart = scheduleTask.LastStart ?? DateTime.Now;
 
             //task already finished
-            if (scheduleTask.LastEndUtc.HasValue && lastStartUtc < scheduleTask.LastEndUtc)
+            if (scheduleTask.LastEnd.HasValue && lastStart < scheduleTask.LastEnd)
                 return false;
 
             //task wasn't finished last time
-            if (lastStartUtc.AddSeconds(scheduleTask.Seconds) <= DateTime.UtcNow)
+            if (lastStart.AddSeconds(scheduleTask.Seconds) <= DateTime.Now)
                 return false;
 
             return true;
@@ -124,7 +124,7 @@ namespace Nop.Services.Tasks
                     return;
 
                 //validation (so nobody else can invoke this method when he wants)
-                if (ScheduleTask.LastStartUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastStartUtc).Value.TotalSeconds < ScheduleTask.Seconds)
+                if (ScheduleTask.LastStart.HasValue && (DateTime.Now - ScheduleTask.LastStart).Value.TotalSeconds < ScheduleTask.Seconds)
                     //too early
                     return;
             }
@@ -144,7 +144,7 @@ namespace Nop.Services.Tasks
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
 
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
-                ScheduleTask.LastEndUtc = DateTime.UtcNow;
+                ScheduleTask.LastEnd = DateTime.Now;
                 scheduleTaskService.UpdateTask(ScheduleTask);
 
                 //log error

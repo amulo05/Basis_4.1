@@ -40,9 +40,14 @@ namespace Nop.WebApi
 
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        //public void ConfigureServices(IServiceCollection services)
+        //{
+        //    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        //}
+
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureApplicationServices(Configuration);
+            return services.ConfigureApplicationServices(Configuration);
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

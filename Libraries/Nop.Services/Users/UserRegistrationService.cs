@@ -23,8 +23,7 @@ namespace Nop.Services.Users
         private readonly IEncryptionService _encryptionService;
         private readonly ISiteService _siteService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
+        //private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IEventPublisher _eventPublisher;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly UserSettings _userSettings;
@@ -51,9 +50,8 @@ namespace Nop.Services.Users
         public UserRegistrationService(IUserService userService, 
             IEncryptionService encryptionService, 
             ISiteService siteService,
-            IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
-            IWorkflowMessageService workflowMessageService,
+            //IWorkflowMessageService workflowMessageService,
             IEventPublisher eventPublisher,
             RewardPointsSettings rewardPointsSettings,
             UserSettings userSettings)
@@ -62,8 +60,7 @@ namespace Nop.Services.Users
             this._encryptionService = encryptionService;
             this._siteService = siteService;
             this._genericAttributeService = genericAttributeService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
+            //this._workflowMessageService = workflowMessageService;
             this._eventPublisher = eventPublisher;
             this._rewardPointsSettings = rewardPointsSettings;
             this._userSettings = userSettings;
@@ -130,7 +127,7 @@ namespace Nop.Services.Users
             if (!user.IsRegistered())
                 return UserLoginResults.NotRegistered;
             //check whether a user is locked out
-            if (user.CannotLoginUntilDateUtc.HasValue && user.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
+            if (user.CannotLoginUntilDate.HasValue && user.CannotLoginUntilDate.Value > DateTime.Now)
                 return UserLoginResults.LockedOut;
 
             if (!PasswordsMatch(_userService.GetCurrentPassword(user.Id), password))
@@ -141,7 +138,7 @@ namespace Nop.Services.Users
                     user.FailedLoginAttempts >= _userSettings.FailedPasswordAllowedAttempts)
                 {
                     //lock out
-                    user.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_userSettings.FailedPasswordLockoutMinutes);
+                    user.CannotLoginUntilDate = DateTime.Now.AddMinutes(_userSettings.FailedPasswordLockoutMinutes);
                     //reset the counter
                     user.FailedLoginAttempts = 0;
                 }
@@ -152,9 +149,9 @@ namespace Nop.Services.Users
 
             //update login details
             user.FailedLoginAttempts = 0;
-            user.CannotLoginUntilDateUtc = null;
+            user.CannotLoginUntilDate = null;
             user.RequireReLogin = false;
-            user.LastLoginDateUtc = DateTime.UtcNow;
+            user.LastLoginDate = DateTime.Now;
             _userService.UpdateUser(user);
 
             return UserLoginResults.Successful;
@@ -231,12 +228,13 @@ namespace Nop.Services.Users
             //at this point request is valid
             request.User.Username = request.Username;
             request.User.Email = request.Email;
+            request.User.Phone = request.Phone;
 
             var userPassword = new UserPassword
             {
                 User = request.User,
                 PasswordFormat = request.PasswordFormat,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOn = DateTime.Now
             };
             switch (request.PasswordFormat)
             {
@@ -336,7 +334,7 @@ namespace Nop.Services.Users
             {
                 User = user,
                 PasswordFormat = request.NewPasswordFormat,
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOn = DateTime.Now
             };
             switch (request.NewPasswordFormat)
             {

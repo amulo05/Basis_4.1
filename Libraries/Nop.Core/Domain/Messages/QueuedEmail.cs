@@ -80,12 +80,12 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the date and time of item creation in UTC
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time in UTC before which this email should not be sent
         /// </summary>
-        public DateTime? DontSendBeforeDateUtc { get; set; }
+        public DateTime? DontSendBeforeDate { get; set; }
 
         /// <summary>
         /// Gets or sets the send tries
@@ -95,7 +95,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the sent date and time
         /// </summary>
-        public DateTime? SentOnUtc { get; set; }
+        public DateTime? SentOn { get; set; }
 
         /// <summary>
         /// Gets or sets the used email account identifier

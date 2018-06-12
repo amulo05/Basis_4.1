@@ -35,11 +35,11 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time in UTC before which this email should not be sent
         /// </summary>
-        public DateTime? DontSendBeforeDateUtc { get; set; }
+        public DateTime? DontSendBeforeDate { get; set; }
     }
 }

@@ -20,8 +20,10 @@ namespace Nop.Data.Mapping.Users
             builder.ToTable(nameof(User));
             builder.HasKey(user => user.Id);
 
-            builder.Property(user => user.Username).HasMaxLength(1000);
-            builder.Property(user => user.Email).HasMaxLength(1000);
+            builder.Property(user => user.Username).IsRequired().HasMaxLength(1000);
+            builder.Property(user => user.Email).IsRequired().HasMaxLength(1000);
+            builder.Property(user => user.Phone).IsRequired().HasMaxLength(1000);
+
             builder.Property(user => user.EmailToRevalidate).HasMaxLength(1000);
             builder.Property(user => user.SystemName).HasMaxLength(400);
 

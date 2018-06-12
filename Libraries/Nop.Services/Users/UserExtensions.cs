@@ -347,7 +347,7 @@ namespace Nop.Services.Users
             if (!geneatedDate.HasValue)
                 return false;
 
-            var daysPassed = (DateTime.UtcNow - geneatedDate.Value).TotalDays;
+            var daysPassed = (DateTime.Now - geneatedDate.Value).TotalDays;
             if (daysPassed > userSettings.PasswordRecoveryLinkDaysValid)
                 return true;
 
@@ -408,7 +408,7 @@ namespace Nop.Services.Users
                 if (userPassword == null)
                     return int.MaxValue;
 
-                return (DateTime.UtcNow - userPassword.CreatedOnUtc).Days;
+                return (DateTime.Now - userPassword.CreatedOn).Days;
             });
 
             return currentLifetime >= userSettings.PasswordLifetime;

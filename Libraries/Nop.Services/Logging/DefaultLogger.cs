@@ -132,22 +132,22 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Gets all log items
         /// </summary>
-        /// <param name="fromUtc">Log item creation from; null to load all records</param>
-        /// <param name="toUtc">Log item creation to; null to load all records</param>
+        /// <param name="from">Log item creation from; null to load all records</param>
+        /// <param name="to">Log item creation to; null to load all records</param>
         /// <param name="message">Message</param>
         /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual IPagedList<Log> GetAllLogs(DateTime? from = null, DateTime? to = null,
             string message = "", LogLevel? logLevel = null, 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _logRepository.Table;
-            if (fromUtc.HasValue)
-                query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
-            if (toUtc.HasValue)
-                query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
+            if (from.HasValue)
+                query = query.Where(l => from.Value <= l.CreatedOn);
+            if (to.HasValue)
+                query = query.Where(l => to.Value >= l.CreatedOn);
             if (logLevel.HasValue)
             {
                 var logLevelId = (int)logLevel.Value;
@@ -155,7 +155,7 @@ namespace Nop.Services.Logging
             }
              if (!string.IsNullOrEmpty(message))
                 query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
-            query = query.OrderByDescending(l => l.CreatedOnUtc);
+            query = query.OrderByDescending(l => l.CreatedOn);
 
             var log = new PagedList<Log>(query, pageIndex, pageSize);
             return log;
@@ -222,7 +222,7 @@ namespace Nop.Services.Logging
                 User = user,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOn = DateTime.Now
             };
 
             _logRepository.Insert(log);

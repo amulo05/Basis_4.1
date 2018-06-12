@@ -149,10 +149,9 @@ namespace Nop.Services.Authentication.External
 
             //create registration request
             var registrationRequest = new UserRegistrationRequest(_workContext.CurrentUser,
-                parameters.Email, parameters.Email,
+                parameters.Email, parameters.Email, "",
                 CommonHelper.GenerateRandomDigitCode(20),
                 PasswordFormat.Clear,
-                _siteContext.CurrentSite.Id,
                 registrationIsApproved);
 
             //whether registration request has been completed successfully
@@ -168,7 +167,7 @@ namespace Nop.Services.Authentication.External
 
             //site owner notifications
             //if (_userSettings.NotifyNewUserRegistration)
-                //_workflowMessageService.SendUserRegisteredNotificationMessage(_workContext.CurrentUser, _localizationSettings.DefaultAdminLanguageId);
+            //_workflowMessageService.SendUserRegisteredNotificationMessage(_workContext.CurrentUser, _localizationSettings.DefaultAdminLanguageId);
 
             //associate external account with registered user
             AssociateExternalAccountWithUser(_workContext.CurrentUser, parameters);
@@ -195,7 +194,7 @@ namespace Nop.Services.Authentication.External
             //registration is succeeded but isn't approved by admin
             if (_userSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
-            
+
             return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }
 

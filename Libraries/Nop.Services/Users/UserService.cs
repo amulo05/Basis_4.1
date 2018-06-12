@@ -120,8 +120,8 @@ namespace Nop.Services.Users
         /// <summary>
         /// Gets all users
         /// </summary>
-        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="createdFrom">Created date from (UTC); null to load all records</param>
+        /// <param name="createdTo">Created date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="userRoleIds">A list of user role identifiers to filter by (at least one match); pass null or empty list in order to load all users; </param>
@@ -141,17 +141,17 @@ namespace Nop.Services.Users
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Users</returns>
-        public virtual IPagedList<User> GetAllUsers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null,
+        public virtual IPagedList<User> GetAllUsers(DateTime? createdFrom = null,
+            DateTime? createdTo = null,
             Guid[] userRoleIds = null, string email = null, string username = null,
             string ipAddress = null, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _userRepository.Table;
-            if (createdFromUtc.HasValue)
-                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+            if (createdFrom.HasValue)
+                query = query.Where(c => createdFrom.Value <= c.CreatedOn);
+            if (createdTo.HasValue)
+                query = query.Where(c => createdTo.Value >= c.CreatedOn);
 
             query = query.Where(c => !c.Deleted);
 
@@ -175,7 +175,7 @@ namespace Nop.Services.Users
                     query = query.Where(w => w.LastIpAddress == ipAddress);
             }
             
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            query = query.OrderByDescending(c => c.CreatedOn);
 
             var users = new PagedList<User>(query, pageIndex, pageSize, getOnlyTotalCount);
             return users;
@@ -184,21 +184,21 @@ namespace Nop.Services.Users
         /// <summary>
         /// Gets online users
         /// </summary>
-        /// <param name="lastActivityFromUtc">User last activity date (from)</param>
+        /// <param name="lastActivityFrom">User last activity date (from)</param>
         /// <param name="userRoleIds">A list of user role identifiers to filter by (at least one match); pass null or empty list in order to load all users; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Users</returns>
-        public virtual IPagedList<User> GetOnlineUsers(DateTime lastActivityFromUtc,
+        public virtual IPagedList<User> GetOnlineUsers(DateTime lastActivityFrom,
             Guid[] userRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _userRepository.Table;
-            query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
+            query = query.Where(c => lastActivityFrom <= c.LastActivityDate);
             query = query.Where(c => !c.Deleted);
             if (userRoleIds != null && userRoleIds.Length > 0)
                 query = query.Where(c => c.UserUserRoleMappings.Select(mapping => mapping.UserRoleId).Intersect(userRoleIds).Any());
             
-            query = query.OrderByDescending(c => c.LastActivityDateUtc);
+            query = query.OrderByDescending(c => c.LastActivityDate);
             var users = new PagedList<User>(query, pageIndex, pageSize);
             return users;
         }
@@ -268,24 +268,6 @@ namespace Nop.Services.Users
             }
             return sortedUsers;
         }
-        
-        /// <summary>
-        /// Gets a user by GUID
-        /// </summary>
-        /// <param name="userGuid">User GUID</param>
-        /// <returns>A user</returns>
-        public virtual User GetUserByGuid(Guid userGuid)
-        {
-            if (userGuid == Guid.Empty)
-                return null;
-
-            var query = from c in _userRepository.Table
-                        where c.UserGuid == userGuid
-                        orderby c.Id
-                        select c;
-            var user = query.FirstOrDefault();
-            return user;
-        }
 
         /// <summary>
         /// Get user by email
@@ -349,10 +331,9 @@ namespace Nop.Services.Users
         {
             var user = new User
             {
-                UserGuid = Guid.NewGuid(),
                 Active = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
+                CreatedOn = DateTime.Now,
+                LastActivityDate = DateTime.Now,
             };
 
             //add to 'Guests' role
@@ -400,25 +381,25 @@ namespace Nop.Services.Users
         /// <summary>
         /// Delete guest user records
         /// </summary>
-        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="createdFrom">Created date from (UTC); null to load all records</param>
+        /// <param name="createdTo">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete users only without shopping cart</param>
         /// <returns>Number of deleted users</returns>
-        public virtual int DeleteGuestUsers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
+        public virtual int DeleteGuestUsers(DateTime? createdFrom, DateTime? createdTo, bool onlyWithoutShoppingCart)
         {
             //prepare parameters
             var pOnlyWithoutShoppingCart = _dataProvider.GetBooleanParameter("OnlyWithoutShoppingCart", onlyWithoutShoppingCart);
-            var pCreatedFromUtc = _dataProvider.GetDateTimeParameter("CreatedFromUtc", createdFromUtc);
-            var pCreatedToUtc = _dataProvider.GetDateTimeParameter("CreatedToUtc", createdToUtc);
+            var pCreatedFrom = _dataProvider.GetDateTimeParameter("CreatedFrom", createdFrom);
+            var pCreatedTo = _dataProvider.GetDateTimeParameter("CreatedTo", createdTo);
             var pTotalRecordsDeleted = _dataProvider.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke sited procedure
             _dbContext.ExecuteSqlCommand(
-                "EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
+                "EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFrom, @CreatedTo, @TotalRecordsDeleted OUTPUT",
                 false, null,
                 pOnlyWithoutShoppingCart,
-                pCreatedFromUtc,
-                pCreatedToUtc,
+                pCreatedFrom,
+                pCreatedTo,
                 pTotalRecordsDeleted);
 
             var totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
@@ -563,7 +544,7 @@ namespace Nop.Services.Users
 
             //get the latest passwords
             if (passwordsToReturn.HasValue)
-                query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn.Value);
+                query = query.OrderByDescending(password => password.CreatedOn).Take(passwordsToReturn.Value);
 
             return query.ToList();
         }

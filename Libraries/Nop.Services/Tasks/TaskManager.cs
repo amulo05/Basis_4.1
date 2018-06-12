@@ -62,10 +62,10 @@ namespace Nop.Services.Tasks
                 //sometimes a task period could be set to several hours (or even days)
                 //in this case a probability that it'll be run is quite small (an application could be restarted)
                 //calculate time before start an interrupted task
-                if (scheduleTask.LastStartUtc.HasValue)
+                if (scheduleTask.LastStart.HasValue)
                 {
                     //seconds left since the last start
-                    var secondsLeft = (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds;
+                    var secondsLeft = (DateTime.Now - scheduleTask.LastStart).Value.TotalSeconds;
 
 
                     if (secondsLeft >= scheduleTask.Seconds)

@@ -47,7 +47,7 @@ namespace Nop.Services.Tasks
             if (Seconds <= 0)
                 return;
 
-            StartedUtc = DateTime.UtcNow;
+            Started = DateTime.Now;
             IsRunning = true;
             foreach (var taskType in _tasks.Values)
             {
@@ -145,7 +145,7 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Get or sets a datetime when thread has been started
         /// </summary>
-        public DateTime StartedUtc { get; private set; }
+        public DateTime Started { get; private set; }
 
         /// <summary>
         /// Get or sets a value indicating whether thread is running

@@ -35,16 +35,16 @@ namespace Nop.Core.Domain.Tasks
         /// <summary>
         /// Gets or sets the datetime when it was started last time
         /// </summary>
-        public DateTime? LastStartUtc { get; set; }
+        public DateTime? LastStart { get; set; }
 
         /// <summary>
         /// Gets or sets the datetime when it was finished last time (no matter failed is success)
         /// </summary>
-        public DateTime? LastEndUtc { get; set; }
+        public DateTime? LastEnd { get; set; }
 
         /// <summary>
         /// Gets or sets the datetime when it was successfully finished last time
         /// </summary>
-        public DateTime? LastSuccessUtc { get; set; }
+        public DateTime? LastSuccess { get; set; }
     }
 }

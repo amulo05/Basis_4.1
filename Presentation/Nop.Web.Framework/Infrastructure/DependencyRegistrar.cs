@@ -119,7 +119,6 @@ namespace Nop.Web.Framework.Infrastructure
             //builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
             builder.RegisterType<NullLogger>().As<ILogger>().InstancePerLifetimeScope();
             builder.RegisterType<UserActivityService>().As<IUserActivityService>().InstancePerLifetimeScope();
-            builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
             builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
@@ -131,7 +130,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 
             //register all settings
-            //builder.RegisterSource(new SettingsSource());
+            builder.RegisterSource(new SettingsSource());
 
             //picture service
             builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
@@ -192,7 +191,9 @@ namespace Nop.Web.Framework.Infrastructure
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentSiteId = c.Resolve<ISiteContext>().CurrentSite.Id;
+                    //var currentSiteId = c.Resolve<ISiteContext>().CurrentSite.Id;
+                    var currentSiteId = default(Guid);
+
                     //uncomment the code below if you want load settings per site only when you have two sites installed.
                     //var currentSiteId = c.Resolve<ISiteService>().GetAllSites().Count > 1
                     //    c.Resolve<ISiteContext>().CurrentSite.Id : 0;

@@ -177,10 +177,10 @@ namespace Nop.Web.Framework
                     var userCookie = GetUserCookie();
                     if (!string.IsNullOrEmpty(userCookie))
                     {
-                        if (Guid.TryParse(userCookie, out Guid userGuid))
+                        if (Guid.TryParse(userCookie, out Guid userId))
                         {
                             //get user from cookie (should not be registered)
-                            var userByCookie = _userService.GetUserByGuid(userGuid);
+                            var userByCookie = _userService.GetUserById(userId);
                             if (userByCookie != null && !userByCookie.IsRegistered())
                                 user = userByCookie;
                         }
@@ -196,7 +196,7 @@ namespace Nop.Web.Framework
                 if (!user.Deleted && user.Active && !user.RequireReLogin)
                 {
                     //set user cookie
-                    SetUserCookie(user.UserGuid);
+                    SetUserCookie(user.Id);
 
                     //cache the found user
                     _cachedUser = user;
@@ -206,7 +206,7 @@ namespace Nop.Web.Framework
             }
             set
             {
-                SetUserCookie(value.UserGuid);
+                SetUserCookie(value.Id);
                 _cachedUser = value;
             }
         }

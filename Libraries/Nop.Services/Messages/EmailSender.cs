@@ -127,9 +127,9 @@ namespace Nop.Services.Messages
                         var attachment = new Attachment(ms, fileName);
                         //string contentType = !string.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
                         //var attachment = new Attachment(ms, fileName, contentType);
-                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
+                        attachment.ContentDisposition.CreationDate = DateTime.Now;
+                        attachment.ContentDisposition.ModificationDate = DateTime.Now;
+                        attachment.ContentDisposition.ReadDate = DateTime.Now;
                         message.Attachments.Add(attachment);                        
                     }
                 }

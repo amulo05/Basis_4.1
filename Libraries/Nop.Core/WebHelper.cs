@@ -94,7 +94,7 @@ namespace Nop.Core
         {
             try
             {
-                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
+                _fileProvider.SetLastWriteTime(_fileProvider.MapPath("~/web.config"), DateTime.Now);
                 return true;
             }
             catch

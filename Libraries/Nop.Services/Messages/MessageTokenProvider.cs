@@ -32,7 +32,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkContext _workContext;
         private readonly IDownloadService _downloadService;
         private readonly ISiteService _siteService;
@@ -79,8 +78,7 @@ namespace Nop.Services.Messages
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="siteInformationSettings">SiteInformation settings</param>
-        public MessageTokenProvider(IDateTimeHelper dateTimeHelper,
-            IWorkContext workContext,
+        public MessageTokenProvider(IWorkContext workContext,
             IDownloadService downloadService,
             ISiteService siteService,
             ISiteContext siteContext,
@@ -90,7 +88,6 @@ namespace Nop.Services.Messages
             IEventPublisher eventPublisher,
             SiteInformationSettings siteInformationSettings)
         {
-            this._dateTimeHelper = dateTimeHelper;
             this._workContext = workContext;
             this._downloadService = downloadService;
             this._urlHelperFactory = urlHelperFactory;
@@ -459,11 +456,9 @@ namespace Nop.Services.Messages
             var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.PasswordRecoveryToken), email = user.Email });
             var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.AccountActivationToken), email = user.Email });
             var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = user.GetAttribute<string>(SystemUserAttributeNames.EmailRevalidationToken), email = user.Email });
-            var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { userGuid = user.UserGuid });
             tokens.Add(new Token("User.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("User.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("User.EmailRevalidationURL", emailRevalidationUrl, true));
-            tokens.Add(new Token("Wishlist.URLForUser", wishlistUrl, true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(user, tokens);

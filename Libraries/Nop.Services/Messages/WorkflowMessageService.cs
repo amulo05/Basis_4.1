@@ -379,10 +379,10 @@ namespace Nop.Services.Messages
                 AttachmentFilePath = attachmentFilePath,
                 AttachmentFileName = attachmentFileName,
                 AttachedDownloadId = messageTemplate.AttachedDownloadId,
-                CreatedOnUtc = DateTime.UtcNow,
+                CreatedOn = DateTime.Now,
                 EmailAccountId = emailAccount.Id,
-                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
-                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
+                DontSendBeforeDate = !messageTemplate.DelayBeforeSend.HasValue ? null
+                    : (DateTime?)(DateTime.Now + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
             };
 
             _queuedEmailService.InsertQueuedEmail(email);

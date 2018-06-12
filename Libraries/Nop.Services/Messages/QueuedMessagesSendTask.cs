@@ -62,7 +62,7 @@ namespace Nop.Services.Messages
                        queuedEmail.AttachmentFileName,
                        queuedEmail.AttachedDownloadId);
 
-                    queuedEmail.SentOnUtc = DateTime.UtcNow;
+                    queuedEmail.SentOn = DateTime.Now;
                 }
                 catch (Exception exc)
                 {

@@ -234,17 +234,6 @@ namespace Nop.Core.Infrastructure
         DateTime GetLastWriteTime(string path);
 
         /// <summary>
-        /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last
-        /// written to
-        /// </summary>
-        /// <param name="path">The file or directory for which to obtain write date and time information</param>
-        /// <returns>
-        /// A System.DateTime structure set to the date and time that the specified file or directory was last written to.
-        /// This value is expressed in UTC time
-        /// </returns>
-        DateTime GetLastWriteTimeUtc(string path);
-
-        /// <summary>
         /// Retrieves the parent directory of the specified path
         /// </summary>
         /// <param name="directoryPath">The path for which to retrieve the parent directory</param>
@@ -284,11 +273,11 @@ namespace Nop.Core.Infrastructure
         /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
         /// </summary>
         /// <param name="path">The file for which to set the date and time information</param>
-        /// <param name="lastWriteTimeUtc">
+        /// <param name="lastWriteTime">
         /// A System.DateTime containing the value to set for the last write date and time of path.
         /// This value is expressed in UTC time
         /// </param>
-        void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
+        void SetLastWriteTime(string path, DateTime lastWriteTime);
         
         /// <summary>
         /// Writes the specified byte array to the file

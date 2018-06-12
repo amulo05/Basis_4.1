@@ -12,19 +12,6 @@ namespace Nop.Core.Domain.Users
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
         private ICollection<UserUserRoleMapping> _userUserRoleMappings;
-        
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public User()
-        {
-            this.UserGuid = Guid.NewGuid();
-        }
-
-        /// <summary>
-        /// Gets or sets the user GUID
-        /// </summary>
-        public Guid UserGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the username
@@ -35,6 +22,11 @@ namespace Nop.Core.Domain.Users
         /// Gets or sets the email
         /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets the phone
+        /// </summary>
+        public string Phone { get; set; }
 
         /// <summary>
         /// Gets or sets the email that should be re-validated. Used in scenarios when a user is already registered and wants to change an email address.
@@ -59,7 +51,7 @@ namespace Nop.Core.Domain.Users
         /// <summary>
         /// Gets or sets the date and time until which a user cannot login (locked out)
         /// </summary>
-        public DateTime? CannotLoginUntilDateUtc { get; set; }
+        public DateTime? CannotLoginUntilDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the user is active
@@ -89,22 +81,17 @@ namespace Nop.Core.Domain.Users
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last login
         /// </summary>
-        public DateTime? LastLoginDateUtc { get; set; }
+        public DateTime? LastLoginDate { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last activity
         /// </summary>
-        public DateTime LastActivityDateUtc { get; set; }
-
-        /// <summary>
-        ///  Gets or sets the site identifier in which user registered
-        /// </summary>
-        public int RegisteredInSiteId { get; set; }
+        public DateTime LastActivityDate { get; set; }
 
         #region Navigation properties
 

@@ -18,18 +18,17 @@ namespace Nop.Services.Users
         /// <param name="passwordFormat">Password format</param>
         /// <param name="siteId">Site identifier</param>
         /// <param name="isApproved">Is approved</param>
-        public UserRegistrationRequest(User user, string email, string username,
+        public UserRegistrationRequest(User user, string username, string email, string phone,
             string password,
             PasswordFormat passwordFormat,
-            Guid siteId,
             bool isApproved = true)
         {
             this.User = user;
             this.Email = email;
+            this.Phone = phone;
             this.Username = username;
             this.Password = password;
             this.PasswordFormat = passwordFormat;
-            this.SiteId = siteId;
             this.IsApproved = isApproved;
         }
 
@@ -49,6 +48,11 @@ namespace Nop.Services.Users
         public string Username { get; set; }
 
         /// <summary>
+        /// Phone
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
         /// Password
         /// </summary>
         public string Password { get; set; }
@@ -57,11 +61,6 @@ namespace Nop.Services.Users
         /// Password format
         /// </summary>
         public PasswordFormat PasswordFormat { get; set; }
-
-        /// <summary>
-        /// Site identifier
-        /// </summary>
-        public Guid SiteId { get; set; }
 
         /// <summary>
         /// Is approved

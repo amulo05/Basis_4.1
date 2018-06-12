@@ -24,7 +24,7 @@ namespace Nop.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("EntityId");
+                    b.Property<Guid>("EntityId");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -34,7 +34,7 @@ namespace Nop.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(400);
 
-                    b.Property<int>("SiteId");
+                    b.Property<Guid>("SiteId");
 
                     b.Property<string>("Value")
                         .IsRequired();
@@ -90,7 +90,7 @@ namespace Nop.Data.Migrations
                     b.Property<string>("Comment")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<Guid?>("EntityId");
 
@@ -136,7 +136,7 @@ namespace Nop.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<string>("FullMessage");
 
@@ -235,9 +235,9 @@ namespace Nop.Data.Migrations
                     b.Property<string>("Body")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
-                    b.Property<DateTime?>("DontSendBeforeDateUtc");
+                    b.Property<DateTime?>("DontSendBeforeDate");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -330,7 +330,7 @@ namespace Nop.Data.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -364,9 +364,9 @@ namespace Nop.Data.Migrations
                     b.Property<string>("CC")
                         .HasMaxLength(500);
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
-                    b.Property<DateTime?>("DontSendBeforeDateUtc");
+                    b.Property<DateTime?>("DontSendBeforeDate");
 
                     b.Property<Guid>("EmailAccountId");
 
@@ -385,7 +385,7 @@ namespace Nop.Data.Migrations
                     b.Property<string>("ReplyToName")
                         .HasMaxLength(500);
 
-                    b.Property<DateTime?>("SentOnUtc");
+                    b.Property<DateTime?>("SentOn");
 
                     b.Property<int>("SentTries");
 
@@ -514,11 +514,11 @@ namespace Nop.Data.Migrations
 
                     b.Property<bool>("Enabled");
 
-                    b.Property<DateTime?>("LastEndUtc");
+                    b.Property<DateTime?>("LastEnd");
 
-                    b.Property<DateTime?>("LastStartUtc");
+                    b.Property<DateTime?>("LastStart");
 
-                    b.Property<DateTime?>("LastSuccessUtc");
+                    b.Property<DateTime?>("LastSuccess");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -570,13 +570,14 @@ namespace Nop.Data.Migrations
 
                     b.Property<string>("AdminComment");
 
-                    b.Property<DateTime?>("CannotLoginUntilDateUtc");
+                    b.Property<DateTime?>("CannotLoginUntilDate");
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<bool>("Deleted");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(1000);
 
                     b.Property<string>("EmailToRevalidate")
@@ -586,22 +587,23 @@ namespace Nop.Data.Migrations
 
                     b.Property<bool>("IsSystemAccount");
 
-                    b.Property<DateTime>("LastActivityDateUtc");
+                    b.Property<DateTime>("LastActivityDate");
 
                     b.Property<string>("LastIpAddress");
 
-                    b.Property<DateTime?>("LastLoginDateUtc");
+                    b.Property<DateTime?>("LastLoginDate");
 
-                    b.Property<int>("RegisteredInSiteId");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(1000);
 
                     b.Property<bool>("RequireReLogin");
 
                     b.Property<string>("SystemName")
                         .HasMaxLength(400);
 
-                    b.Property<Guid>("UserGuid");
-
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasMaxLength(1000);
 
                     b.HasKey("Id");
@@ -614,7 +616,7 @@ namespace Nop.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreatedOnUtc");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<string>("Password");
 

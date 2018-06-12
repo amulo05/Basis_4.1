@@ -240,7 +240,7 @@ namespace Nop.Services.Logging
                 EntityName = entity?.GetType().BaseType.Name,
                 UserId = user.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
-                CreatedOnUtc = DateTime.UtcNow,
+                CreatedOn = DateTime.Now,
                 IpAddress = _webHelper.GetCurrentIpAddress()
             };
             _activityLogRepository.Insert(logItem);
@@ -285,9 +285,9 @@ namespace Nop.Services.Logging
 
             //filter by creation date
             if (createdOnFrom.HasValue)
-                query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOnUtc);
+                query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOn);
             if (createdOnTo.HasValue)
-                query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOnUtc);
+                query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOn);
 
             //filter by log type
             if (activityLogTypeId.HasValue && activityLogTypeId.Value != default(Guid))
@@ -303,7 +303,7 @@ namespace Nop.Services.Logging
             if (entityId.HasValue && entityId.Value != default(Guid))
                 query = query.Where(logItem => entityId.Value == logItem.EntityId);
 
-            query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
+            query = query.OrderByDescending(logItem => logItem.CreatedOn).ThenBy(logItem => logItem.Id);
 
             return new PagedList<ActivityLog>(query, pageIndex, pageSize);
         }

@@ -77,6 +77,7 @@ namespace Nop.Data
 
             try
             {
+                entity.Id = Guid.NewGuid();
                 Entities.Add(entity);
                 _context.SaveChanges();
             }

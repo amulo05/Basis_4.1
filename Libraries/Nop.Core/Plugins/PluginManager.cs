@@ -379,7 +379,7 @@ namespace Nop.Core.Plugins
                 // prevent app from starting altogether
                 var pluginFolder = _fileProvider.MapPath(PluginsPath);
                 _shadowCopyFolder = _fileProvider.MapPath(ShadowCopyPath);
-                _reserveShadowCopyFolder = _fileProvider.Combine(_fileProvider.MapPath(ShadowCopyPath), $"{RESERVE_SHADOW_COPY_FOLDER_NAME}{DateTime.Now.ToFileTimeUtc()}");
+                _reserveShadowCopyFolder = _fileProvider.Combine(_fileProvider.MapPath(ShadowCopyPath), $"{RESERVE_SHADOW_COPY_FOLDER_NAME}{DateTime.Now.ToFileTime()}");
                 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
