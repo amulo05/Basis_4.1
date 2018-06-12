@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Nop.WebApi.Validators.User
 {
-    [Validator(typeof(RegisterValidator))]
     public class RegisterValidator : BaseNopValidator<RegisterModel>
     {
         public RegisterValidator()

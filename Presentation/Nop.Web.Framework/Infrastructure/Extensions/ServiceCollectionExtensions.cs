@@ -54,16 +54,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                //implement schedule tasks
-                //database is already installed, so start scheduled tasks
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
+            //if (DataSettingsManager.DatabaseIsInstalled)
+            //{
+            //    //implement schedule tasks
+            //    //database is already installed, so start scheduled tasks
+            //    TaskManager.Instance.Initialize();
+            //    TaskManager.Instance.Start();
 
-                //log application start
-                EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
-            }
+            //    //log application start
+            //    EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
+            //}
 
             return serviceProvider;
         }

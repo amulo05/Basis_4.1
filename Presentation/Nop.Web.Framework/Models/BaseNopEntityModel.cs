@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Nop.Web.Framework.Models
 {
     /// <summary>
@@ -9,6 +11,6 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Gets or sets model identifier
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
     }
 }

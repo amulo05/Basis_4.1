@@ -182,11 +182,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopMvc(this IApplicationBuilder application)
         {
-            application.UseMvc(routeBuilder =>
-            {
-                //register all routes
-                //EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
-            });
+            //application.UseMvc(routeBuilder =>
+            //{
+            //    //register all routes
+            //    EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+            //});
+            application.UseMvc();
         }
     }
 }

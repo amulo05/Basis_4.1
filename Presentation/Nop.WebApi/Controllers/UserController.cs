@@ -18,6 +18,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class UserController : BaseController
     {
         #region Fields
@@ -54,17 +55,16 @@ namespace Nop.WebApi.Controllers
 
 
         // GET api/values
-        [HttpGet]
-        public ActionResult<ApiResult> Get()
+        [HttpGet("get")]
+        public IActionResult Get()
         {
             return Result(_userService.GetAllUserRoles().ToList());
         }
 
 
         #region Register
-
-        [HttpPost]
-        public virtual ActionResult<ApiResult> Register(RegisterModel model)
+        [HttpPost("register")]
+        public virtual IActionResult Register(RegisterModel model)
         {
             //check whether registration is allowed
             //var user = _workContext.CurrentUser;
@@ -97,14 +97,15 @@ namespace Nop.WebApi.Controllers
                     //login user now
                     //if (isApproved)
                     //    _authenticationService.SignIn(user, true);
+                    var userModel = this._userModelFactory.PrepareUserModel(user);
+                    return Result(userModel);
                 }
-
-                //errors
+                return Result(null, false,9, registrationResult.Errors.FirstOrDefault());
             }
-
-            //If we got this far, something failed, redisplay form
-            //model = _userModelFactory.PrepareRegisterModel(model, true, userAttributesXml);
-            return Result(model);
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         #endregion

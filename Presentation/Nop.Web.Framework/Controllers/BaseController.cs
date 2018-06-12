@@ -31,15 +31,16 @@ namespace Nop.Web.Framework.Controllers
     //[SaveIpAddress]
     public abstract class BaseController : ControllerBase
     {
-        public ActionResult<ApiResult> Result(object obj, bool success = true, int statecode = 0, string message = "")
+        [ProducesResponseType(200, Type = typeof(ApiResult))]
+        public IActionResult Result(object obj, bool success = true, int statecode = 0, string message = "")
         {
-            return new ApiResult()
+            return Ok(new ApiResult()
             {
                 Result = obj,
                 StateCode = statecode,
                 Success = success,
                 Message = message
-            };
+            });
         }
     }
 }
